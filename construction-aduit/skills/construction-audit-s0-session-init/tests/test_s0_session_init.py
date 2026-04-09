@@ -12,8 +12,9 @@ import yaml
 from docx import Document
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPT = ROOT / ".opencode/skills/construction-audit-s0-session-init/scripts/session_init.py"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+SCRIPT = AUDIT_ROOT / "skills/construction-audit-s0-session-init/scripts/session_init.py"
 
 
 class S0SessionInitCliTests(unittest.TestCase):
@@ -54,7 +55,7 @@ workbook.save(r"{path}")
             [python, "-c", script],
             capture_output=True,
             text=True,
-            cwd=ROOT,
+            cwd=WORKSPACE_ROOT,
         )
         if result.returncode != 0:
             raise AssertionError(result.stderr or result.stdout)
@@ -87,7 +88,7 @@ workbook.save(r"{path}")
             command,
             capture_output=True,
             text=True,
-            cwd=ROOT,
+            cwd=WORKSPACE_ROOT,
         )
 
     def _assert_config_complete(self, config: dict, expected_source_format: str) -> None:

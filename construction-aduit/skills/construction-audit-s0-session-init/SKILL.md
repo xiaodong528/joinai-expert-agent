@@ -72,7 +72,7 @@ output_dir: "/abs/path/to/output"
 ## CLI 入口
 
 ```bash
-python .opencode/skills/construction-audit-s0-session-init/scripts/session_init.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s0-session-init/scripts/session_init.py \
   --rule-document /abs/path/rule_document.docx \
   --spreadsheet /abs/path/spreadsheet.xls \
   --audit-type budget \

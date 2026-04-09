@@ -9,9 +9,11 @@ import openpyxl
 import xlwt
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPT = ROOT / ".opencode/skills/construction-audit-s2-workbook-render/scripts/spreadsheet_reader.py"
-SAMPLE_XLS = ROOT / "train/预算-表一（451定额度折前）/东海县海陵家苑三网小区新建工程-预算（表一451定额度折前有错）.xls"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+CONSTRUCTION_REVIEW_ROOT = WORKSPACE_ROOT / "construction-review"
+SCRIPT = AUDIT_ROOT / "skills/construction-audit-s2-workbook-render/scripts/spreadsheet_reader.py"
+SAMPLE_XLS = CONSTRUCTION_REVIEW_ROOT / "train/预算-表一（451定额度折前）/东海县海陵家苑三网小区新建工程-预算（表一451定额度折前有错）.xls"
 
 
 class SpreadsheetReaderCliTests(unittest.TestCase):
@@ -28,7 +30,7 @@ class SpreadsheetReaderCliTests(unittest.TestCase):
             ],
             capture_output=True,
             text=True,
-            cwd=ROOT,
+            cwd=WORKSPACE_ROOT,
         )
 
     def _load_sheet_json(self, output_dir: Path, filename: str) -> dict:

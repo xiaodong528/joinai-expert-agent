@@ -206,14 +206,16 @@ def sheet_mentions(calc_text: str, payloads: dict[str, dict[str, Any]]) -> list[
     return mentions
 
 
-def ensure_rule_doc_markdown(config: dict[str, Any], root_dir: Path) -> Path | None:
+def ensure_rule_doc_markdown(config: dict[str, Any], construction_audit_root: Path, workdir: Path) -> Path | None:
     rule_doc_path, markdown_path = extract_rule_doc_config(config)
     if not rule_doc_path or not markdown_path:
         return None
     if markdown_path.is_file() and markdown_path.stat().st_size > 0:
         return markdown_path
-    render_script = root_dir / ".opencode/skills/construction-audit-s1-rule-doc-render/scripts/render_rule_doc_markdown.sh"
-    run_subprocess([str(render_script), str(rule_doc_path), str(markdown_path)], cwd=root_dir)
+    render_script = (
+        construction_audit_root / "skills/construction-audit-s1-rule-doc-render/scripts/render_rule_doc_markdown.sh"
+    )
+    run_subprocess([str(render_script), str(rule_doc_path), str(markdown_path)], cwd=workdir)
     return markdown_path
 
 
@@ -334,7 +336,8 @@ def main(argv: list[str] | None = None) -> int:
             return friendly_error(f"工作簿不存在: {spreadsheet_path}")
 
         scripts_dir = Path(__file__).resolve().parent
-        root_dir = Path(__file__).resolve().parents[4]
+        construction_audit_root = Path(__file__).resolve().parents[3]
+        workspace_root = construction_audit_root.parent.parent
         sheets_dir = output_dir / "sheets"
         workbook_md = output_dir / "workbook.md"
 
@@ -349,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
                 "--output-dir",
                 str(sheets_dir),
             ],
-            cwd=root_dir,
+            cwd=workspace_root,
         )
 
         for sheet_name in target_sheets:
@@ -357,7 +360,7 @@ def main(argv: list[str] | None = None) -> int:
             if not expected_path.is_file():
                 raise ValueError(f"未导出目标 sheet JSON: {sheet_name}")
 
-        rule_doc_markdown = ensure_rule_doc_markdown(config, root_dir)
+        rule_doc_markdown = ensure_rule_doc_markdown(config, construction_audit_root, workspace_root)
         if rule_doc_markdown:
             payloads, payload_paths = load_sheet_payloads(sheets_dir)
             rule_rows_payload = extract_rule_rows(rule_doc_markdown.read_text(encoding="utf-8"), str(rule_doc_markdown.resolve()))
@@ -375,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
         ]
         for sheet_name in target_sheets:
             render_command.extend(["--sheet-name", sheet_name])
-        run_subprocess(render_command, cwd=root_dir)
+        run_subprocess(render_command, cwd=workspace_root)
 
         if not workbook_md.is_file() or workbook_md.stat().st_size == 0:
             return friendly_error(f"workbook.md 输出为空: {workbook_md}")

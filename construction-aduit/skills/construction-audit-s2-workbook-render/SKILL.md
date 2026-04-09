@@ -86,19 +86,19 @@ description: "工程审核工作簿渲染技能：读取 `audit-config.yaml` 中
 ## CLI 入口
 
 ```bash
-python .opencode/skills/construction-audit-s2-workbook-render/scripts/run_workbook_render.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s2-workbook-render/scripts/run_workbook_render.py \
   --config /abs/path/audit-config.yaml
 ```
 
 低层脚本：
 
 ```bash
-python .opencode/skills/construction-audit-s2-workbook-render/scripts/spreadsheet_reader.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s2-workbook-render/scripts/spreadsheet_reader.py \
   --input /abs/path/spreadsheet.xls \
   --all-sheets \
   --output-dir /abs/path/output/sheets
 
-python .opencode/skills/construction-audit-s2-workbook-render/scripts/render_workbook_markdown.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s2-workbook-render/scripts/render_workbook_markdown.py \
   --sheets-dir /abs/path/output/sheets \
   --output /abs/path/output/workbook.md
 ```
@@ -161,4 +161,4 @@ python .opencode/skills/construction-audit-s2-workbook-render/scripts/render_wor
 - 若 `rule_document` 信息可用，本技能会复用阶段2的 `rule_doc.md` 或懒生成它，然后基于确定性规则行提取为单元格补充规则标注。
 - `workbook.md` 是简化桥接视图，只展示值与 merge 语义；结构化公式与规则信息保留在 `sheets/*.json` 中。
 - 除工作簿原生可读公式外，本技能不额外推断新公式表达。
-- `skills-bak` 中的 `construction-audit-s2-sheet-audit` 仅作为历史参考，不应再被本技能运行时入口或正式测试直接引用。
+- 历史备份技能目录仅供参考，不应再被本技能运行时入口或正式测试直接引用。

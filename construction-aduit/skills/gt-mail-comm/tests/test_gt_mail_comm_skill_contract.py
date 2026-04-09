@@ -3,8 +3,9 @@ import unittest
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SKILL_PATH = ROOT / ".opencode/skills/gt-mail-comm/SKILL.md"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+SKILL_PATH = AUDIT_ROOT / "skills/gt-mail-comm/SKILL.md"
 
 
 class GtMailCommSkillContractTests(unittest.TestCase):
@@ -32,12 +33,13 @@ class GtMailCommSkillContractTests(unittest.TestCase):
         self.assertTrue(SKILL_PATH.exists(), f"missing skill file: {SKILL_PATH}")
         content = SKILL_PATH.read_text(encoding="utf-8")
 
-        for role in ("Orchestrator", "Worker", "Reviewer", "Monitor"):
+        for role in ("Orchestrator", "Worker", "Reviewer"):
             self.assertIn(role, content)
 
         for stage in ("S0", "S1", "S2", "S3", "S4"):
             self.assertIn(stage, content)
 
+        self.assertIn("Gas Town 默认 witness", content)
         self.assertNotIn("audit-report.json", content)
         self.assertNotRegex(content, r"corrected\.(xlsx|xls)")
 

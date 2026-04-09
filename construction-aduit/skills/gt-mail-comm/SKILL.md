@@ -1,23 +1,23 @@
 ---
 name: gt-mail-comm
-description: "Gas Town 邮件通信共享技能：供 Orchestrator、Worker、Reviewer、Monitor 在当前 rig 内通过 `gt mail send`、`gt mail check --inject`、`gt mail list`、`gt mail read` 协调 S0-S4 阶段任务、review 请求和监控告警。Triggers on gt mail, send message, check mail, review request, monitor alert, Agent 间通信、邮件通知、阶段回执。"
+description: "Gas Town 邮件通信共享技能：供 Orchestrator、Worker、Reviewer 在当前 rig 内通过 `gt mail send`、`gt mail check --inject`、`gt mail list`、`gt mail read` 协调 S0-S4 阶段任务与 review 请求。Gas Town 默认 witness 巡逻不属于 construction-audit 自定义通信主链。Triggers on gt mail, send message, check mail, review request, Agent 间通信、邮件通知、阶段回执。"
 ---
 
 # Skill: gt-mail-comm
 
-**用途（Purpose）:** 所有角色共享的 GT 邮件通信技能。在当前 rig 内统一处理四角色之间的任务分派、阶段回执、审查请求、进度查询与异常告警。
+**用途（Purpose）:** construction-audit 主链三角色共享的 GT 邮件通信技能。在当前 rig 内统一处理任务分派、阶段回执与审查请求。Gas Town 默认 witness 巡逻继续由平台接管，不作为 construction-audit 自定义邮件通信角色。
 
 ## 依赖
 
 - GT 运行时环境：`gt mail` CLI 可用
 - 当前 GT 会话环境变量：`GT_ROLE`、`GT_RIG`
-- 共享角色：`Orchestrator`、`Worker`、`Reviewer`、`Monitor`
+- 共享角色：`Orchestrator`、`Worker`、`Reviewer`
 
 ## 输入契约（Input Contract）
 
 | 输入 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| `to` | enum | 否 | `mayor` / `polecat` / `refinery` / `witness` |
+| `to` | enum | 否 | `mayor` / `polecat` / `refinery` |
 | `subject` | string | 否 | 邮件主题，建议包含阶段标识和动作 |
 | `body` | string | 否 | 邮件正文，建议包含状态、摘要、附件路径 |
 | `mail_id` | string | 否 | 读取指定邮件时使用 |
@@ -60,9 +60,6 @@ gt mail read <mail-id>
 | Worker | Orchestrator | S0-S4 完成/失败回执，附当前正式产物路径 |
 | Orchestrator | Reviewer | S0、S1、S2、S3、S4 阶段 review 请求 |
 | Reviewer | Orchestrator | QA 结论回执，附 `qa-report.json` 路径 |
-| Monitor | Orchestrator | 超时、失败、进度异常告警 |
-| Orchestrator | Monitor | 进度查询、巡逻补充说明 |
-
 ### 4. 邮件主题与正文约定
 
 推荐主题格式：
@@ -84,13 +81,18 @@ gt mail read <mail-id>
 附件路径：只引用当前正式产物，例如 audit-config.yaml、rule_doc.md、workbook.md、sheets/*.json、findings/*.json、audit-report.docx、qa-report.json
 ```
 
+## 补充说明
+
+- Gas Town 默认 witness 若启用，仍由平台按默认 patrol 机制处理；construction-audit 不再注册 custom witness agent，也不依赖其参与主链邮件通信。
+
 ## 验证清单（Validation Checklist）
 
 - [ ] `gt mail send` 返回邮件 ID，且接收方可通过 `gt mail check --inject` 收到
 - [ ] `gt mail list` 能列出当前 rig 内邮件元信息
 - [ ] `gt mail read` 能读取指定邮件全文
 - [ ] 邮件主题包含 `S0`、`S1`、`S2`、`S3` 或 `S4`
-- [ ] 典型通信模式覆盖 Orchestrator、Worker、Reviewer、Monitor
+- [ ] 典型通信模式覆盖 Orchestrator、Worker、Reviewer
+- [ ] 文案明确 Gas Town 默认 witness 不属于 construction-audit 自定义通信主链
 - [ ] 附件路径只引用当前正式产物，不引用历史 JSON 报告或修正版工作簿
 
 ## 非职责范围（Non-goals）

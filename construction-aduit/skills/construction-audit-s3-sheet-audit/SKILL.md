@@ -79,7 +79,7 @@ description: "工程审核按表审计技能：每个智能体只审核一个 sh
 ## Python Helper
 
 ```bash
-python .opencode/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.py \
   --sheet-data /abs/path/sheets/表一_451定额折前_.json \
   --context-sheets-dir /abs/path/sheets \
   --payload-json '{"sheet_name":"表一（451定额折前）","target_cell":"J13","formula":"left + right","operands":[{"sheet":"表一（451定额折前）","cell_ref":"J12"},{"sheet":"表一（451定额折前）","cell_ref":"I13"}]}'

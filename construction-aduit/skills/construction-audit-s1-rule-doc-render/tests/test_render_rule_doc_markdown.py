@@ -6,8 +6,9 @@ from pathlib import Path
 from docx import Document
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPT = ROOT / ".opencode/skills/construction-audit-s1-rule-doc-render/scripts/render_rule_doc_markdown.sh"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+SCRIPT = AUDIT_ROOT / "skills/construction-audit-s1-rule-doc-render/scripts/render_rule_doc_markdown.sh"
 
 
 class RenderRuleDocMarkdownTests(unittest.TestCase):
@@ -16,7 +17,7 @@ class RenderRuleDocMarkdownTests(unittest.TestCase):
             [str(SCRIPT), str(input_path), str(output_path)],
             capture_output=True,
             text=True,
-            cwd=ROOT,
+            cwd=WORKSPACE_ROOT,
         )
 
     def test_renders_docx_to_markdown(self):

@@ -6,8 +6,9 @@ import unittest
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPT = ROOT / ".opencode/skills/construction-audit-s2-workbook-render/scripts/render_workbook_markdown.py"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+SCRIPT = AUDIT_ROOT / "skills/construction-audit-s2-workbook-render/scripts/render_workbook_markdown.py"
 
 
 class RenderWorkbookMarkdownTests(unittest.TestCase):
@@ -23,7 +24,7 @@ class RenderWorkbookMarkdownTests(unittest.TestCase):
             ],
             capture_output=True,
             text=True,
-            cwd=ROOT,
+            cwd=WORKSPACE_ROOT,
         )
 
     def test_renders_workbook_markdown_from_sheet_json(self):

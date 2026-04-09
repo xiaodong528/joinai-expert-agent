@@ -60,14 +60,14 @@ description: "工程审核规则文档渲染技能：读取 `audit-config.yaml` 
 ## CLI 入口
 
 ```bash
-python .opencode/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_doc_render.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_doc_render.py \
   --config /abs/path/audit-config.yaml
 ```
 
 低层脚本：
 
 ```bash
-.opencode/skills/construction-audit-s1-rule-doc-render/scripts/render_rule_doc_markdown.sh \
+joinai-expert-agent/construction-aduit/skills/construction-audit-s1-rule-doc-render/scripts/render_rule_doc_markdown.sh \
   /abs/path/rule_document.docx \
   /abs/path/rule_doc.md
 ```
@@ -115,4 +115,4 @@ python .opencode/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_d
 - 本技能只对应 `v0.1.0` 的阶段2，不与阶段3、阶段4合并。
 - 阶段2的正式下游是 `construction-audit-s3-sheet-audit`，运行时主链应将这里生成的 `rule_doc.md` 直接交给该阶段消费。
 - “行级锚点 ID”不通过新增 sidecar 产物实现，而由后续阶段基于标题路径和表格体 1-based 行号确定性推导。
-- `skills-bak` 中的 `construction-audit-s1-rule-extraction` 仅作为历史参考，不应再被本技能的运行时入口或正式测试直接引用。
+- 历史备份技能目录仅供参考，不应再被本技能的运行时入口或正式测试直接引用。

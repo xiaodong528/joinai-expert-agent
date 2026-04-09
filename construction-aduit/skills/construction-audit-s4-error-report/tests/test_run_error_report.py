@@ -10,8 +10,9 @@ from docx import Document
 import yaml
 
 
-ROOT = Path(__file__).resolve().parents[4]
-S4_SCRIPT = ROOT / ".opencode/skills/construction-audit-s4-error-report/scripts/run_error_report.py"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+S4_SCRIPT = AUDIT_ROOT / "skills/construction-audit-s4-error-report/scripts/run_error_report.py"
 
 
 def extract_docx_text(docx_path: Path) -> str:
@@ -48,7 +49,7 @@ class RunErrorReportTests(unittest.TestCase):
                 [sys.executable, str(S4_SCRIPT), "--config", str(config_path)],
                 capture_output=True,
                 text=True,
-                cwd=ROOT,
+                cwd=WORKSPACE_ROOT,
             )
 
             self.assertNotEqual(result.returncode, 0)
@@ -107,7 +108,7 @@ class RunErrorReportTests(unittest.TestCase):
                 [sys.executable, str(S4_SCRIPT), "--config", str(config_path)],
                 capture_output=True,
                 text=True,
-                cwd=ROOT,
+                cwd=WORKSPACE_ROOT,
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -209,7 +210,7 @@ class RunErrorReportTests(unittest.TestCase):
                 [sys.executable, str(S4_SCRIPT), "--config", str(config_path)],
                 capture_output=True,
                 text=True,
-                cwd=ROOT,
+                cwd=WORKSPACE_ROOT,
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -296,7 +297,7 @@ class RunErrorReportTests(unittest.TestCase):
                 [sys.executable, str(S4_SCRIPT), "--config", str(config_path)],
                 capture_output=True,
                 text=True,
-                cwd=ROOT,
+                cwd=WORKSPACE_ROOT,
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
