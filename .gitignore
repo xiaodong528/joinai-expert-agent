@@ -15,7 +15,6 @@ output/
 .dolt-meta/
 .dolt-wal/
 .dolt-wal/
-docs
 examples/
 .env
 .env.local
