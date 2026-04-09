@@ -1,35 +1,47 @@
 # AGENTS.md
 
-This file provides guidance when working with the `ai-video-generation` workspace.
+This file provides guidance when working with the `video-generation/` module in this repository.
 
-## Workspace Layout
+## Module Layout
 
-This project intentionally uses a **dual-directory** layout:
+This module keeps the video-generation source and runtime snapshot together under one repo-local root:
 
-- `ai-video-generation/`
-  Holds Gas Town configuration, runtime documentation, and generated outputs.
-- `joinai-expert-agent/video-generation/`
-  Holds the source-of-truth Agent and Skill Markdown files.
+- `agents/`
+  Source-of-truth agent definitions.
+- `skills/`
+  Stage skills and QA guidance.
+- `gt/`
+  Gas Town configuration, runtime state snapshot, and role overrides.
+- `docs/`
+  Ignored local docs snapshot and research material.
+- `output/`
+  Ignored local archive / sample directory inside the repository.
 
-Runtime discovery does **not** depend on an in-repo `.opencode/` folder. Agent and Skill discovery is provided through user-level symlinks:
+Runtime discovery does **not** depend on an in-repo `.opencode/` folder. Agent and skill discovery is provided through user-level symlinks:
 
 - `~/.config/opencode/agents/video-generation-*.md`
 - `~/.config/opencode/skills/video-*`
 - `~/.config/opencode/skills/video-generation-qa-checklist`
 
+Do not confuse the ignored repo-local `output/` directory with the formal runtime output root. The runtime contract remains:
+
+```text
+Video-Producer-output/{project_id}/
+```
+
 ## JAS Role Mapping
 
-The video workflow now uses the standard three-role JAS layout:
+The video workflow uses the standard three-role JAS layout:
 
 - `video-generation-orchestrator` → Mayor
 - `video-generation-worker` → Polecat
 - `video-generation-reviewer` → Refinery
 
-GT configuration under `ai-video-generation/gt/` maps the three GT roles to those three OpenCode agents.
+GT configuration under `gt/` maps the three GT roles to those three OpenCode agents.
 
 ## Running Stage Scripts
 
-Stage source files live in `joinai-expert-agent/video-generation/skills/`, but runtime commands should use the user-level symlink contract:
+Stage source files live in `skills/`, but runtime commands should use the user-level symlink contract:
 
 ```bash
 PYTHONPATH=~/.config/opencode/skills/video-s2-character-anchor/scripts \
@@ -38,7 +50,7 @@ python ~/.config/opencode/skills/video-s2-character-anchor/scripts/stage2_seedre
   --story Video-Producer-output/test-001/scripts/story.yaml
 ```
 
-All stage scripts accept `--project-id` and default to `Video-Producer-output` as the output root.
+All stage scripts accept `--project-id` and default to `Video-Producer-output` as the base output directory.
 
 ## Pipeline Overview
 
@@ -56,17 +68,17 @@ Stage 9  字幕生成 / 烧录              → subtitles/final.srt + videos/fin
 Stage 10 技术 QA + Reviewer 复核      → qa-report.json
 ```
 
-唯一合法输出根目录是：
+The single valid runtime output root is:
 
 ```text
 Video-Producer-output/{project_id}/
 ```
 
-Do not reintroduce the retired nonstandard output root.
+Repo-local `video-generation/output/` is only an ignored archive / sample directory. Do not replace the runtime contract with that path.
 
 ## Editing Rules
 
-- If you update a Stage Skill, also update the corresponding GT bead instructions when runtime commands change.
+- If you update a stage skill, also update the corresponding GT bead instructions when runtime commands change.
 - Keep all runtime examples pointed at `~/.config/opencode/skills/...`.
 - Do not reintroduce the retired single-agent entrypoint, hidden in-repo skill paths, or legacy patrol wording into active runtime docs or configs.
 - Use `video-generation-qa-checklist` for reviewer-facing acceptance and phase review guidance.

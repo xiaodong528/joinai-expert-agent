@@ -1,15 +1,27 @@
 # AGENTS.md
 
-This file provides guidance when working with the `software-prototyper` workspace.
+This file provides guidance when working with the `software-prototyper/` module in this repository.
 
-## Workspace Layout
+## Module Layout
 
-This workspace uses a dual-directory layout:
+This module keeps the software-prototyper source and runtime snapshot together under one repo-local root:
 
-- `software-prototyper/`
-  Holds GT runtime assets, runtime docs, `Prototype-output/{project_id}`, and acceptance evidence.
-- `joinai-expert-agent/software-prototyper/`
-  Holds the source-of-truth Agent and Skill Markdown files.
+- `agents/`
+  Source-of-truth agent definitions.
+- `skills/`
+  Stage skills and working-method skills.
+- `gt/`
+  Gas Town runtime config, rigs, beads, and role overrides.
+- `docs/`
+  Ignored local docs snapshot and planning notes.
+- `output/`
+  Ignored local archive / sample / evidence directory inside the repository.
+
+Do not confuse the ignored repo-local `output/` directory with the runtime delivery contract. The formal runtime output root remains:
+
+```text
+Prototype-output/{project_id}/
+```
 
 ## Dual Entry Workflow
 
@@ -28,25 +40,27 @@ The master control plane is `Mayor + Refinery`.
 - `software-prototyper-reviewer` → Refinery
 
 Mayor + Refinery act as the master control plane.
-Polecat sessions are the parallel subagent execution plane.
+Polecat sessions are the parallel execution plane.
 
-GT configuration under `software-prototyper/gt/` maps the three GT roles to those three agents.
+GT configuration under `gt/` maps the three GT roles to those three agents.
 
 ## Source Of Truth
 
-- Agent source: `joinai-expert-agent/software-prototyper/agents/*.md`
-- Skill source: `joinai-expert-agent/software-prototyper/skills/*`
-- The project now includes a vendored local skill pack for execution workflows and GT operations.
+- Agent source: `agents/*.md`
+- Skill source: `skills/*`
+- GT runtime snapshot: `gt/`
 
-## Output Root
+The project includes vendored local skills for execution workflows and GT operations directly under `skills/`.
 
-All delivery evidence is collected under:
+## Output Contract
+
+All formal delivery evidence is collected under:
 
 ```text
 Prototype-output/{project_id}/
 ```
 
-Recommended structure:
+Recommended runtime structure:
 
 - `specs/`
 - `plans/`
@@ -54,15 +68,17 @@ Recommended structure:
 - `docs/`
 - `evidence/`
 
+Repo-local `software-prototyper/output/` is only an ignored archive / sample directory. Runtime code, runbooks, and acceptance evidence should still follow `Prototype-output/{project_id}/`.
+
 ## GT Notes
 
-- Town config: `software-prototyper/gt/settings/config.json`
-- Rig config: `software-prototyper/gt/software-prototyper/settings/config.json`
-- Role TOML override: `software-prototyper/gt/roles/{mayor,polecat,refinery}.toml`
+- Town config: `gt/settings/config.json`
+- Rig config: `gt/software-prototyper/settings/config.json`
+- Role TOML override: `gt/roles/{mayor,polecat,refinery}.toml`
 - Wave beads:
-  - `software-prototyper/gt/software-prototyper/beads/wave-1-foundation-bootstrap.md`
-  - `software-prototyper/gt/software-prototyper/beads/wave-2-module-build.md`
-  - `software-prototyper/gt/software-prototyper/beads/wave-3-integration-qa.md`
+  - `gt/software-prototyper/beads/wave-1-foundation-bootstrap.md`
+  - `gt/software-prototyper/beads/wave-2-module-build.md`
+  - `gt/software-prototyper/beads/wave-3-integration-qa.md`
 
 ## Parallel Dispatch Meaning
 

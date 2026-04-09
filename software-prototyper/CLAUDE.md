@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance when working with the `software-prototyper` workspace.
+This file provides guidance when working with the `software-prototyper/` module in this repository.
 
 ## Runtime Intent
 
@@ -12,6 +12,18 @@ This file provides guidance when working with the `software-prototyper` workspac
 
 Master control plane: Mayor + Refinery
 Parallel execution plane: multiple Polecat sessions
+
+## Repo-Local Layout
+
+Within this repository, use these paths directly:
+
+- Agents: `agents/*.md`
+- Skills: `skills/*`
+- GT runtime snapshot: `gt/`
+- Ignored local docs snapshot: `docs/`
+- Ignored local archive directory: `output/`
+
+The ignored repo-local `output/` directory is not the formal runtime contract.
 
 ## Input Modes
 
@@ -32,13 +44,15 @@ The goal-driven workflow is embedded inside `software-prototyper-orchestrator`.
 
 ## Source And Runtime Split
 
-- Runtime workspace: `software-prototyper/gt`
-- Agent and Skill source: `joinai-expert-agent/software-prototyper`
-- Execution workflows and GT helper skills are vendored into the project skill tree.
+- Repo-local source: `agents/` and `skills/`
+- Runtime snapshot: `gt/`
+- Formal runtime output root: `Prototype-output/{project_id}/`
+
+Keep using `Prototype-output/{project_id}/` for generated specs, workspace code, runbooks, and QA evidence. Do not replace it with `software-prototyper/output/`, which is only an ignored local archive directory in this repo.
 
 ## Output Contract
 
-The single valid output root is:
+The single valid runtime output root is:
 
 ```text
 Prototype-output/{project_id}/

@@ -1,33 +1,39 @@
 # AGENTS.md
 
-This file provides guidance to Codex when working with the `construction-review` workspace.
+This file provides guidance to Codex when working with the `construction-aduit/` module in this repository.
 
-## Project Overview
+## Module Overview
 
-This workspace hosts the Gas Town runtime, docs, examples, and training data for the construction audit expert agent. The formal runtime workflow always starts from two user-provided files:
+This module stores the construction-audit expert-agent source, a local Gas Town runtime snapshot, and ignored local workspace artifacts.
+
+The formal runtime workflow always starts from two user-provided files:
 
 - `rule_document.docx`
 - `spreadsheet.xlsx` / `spreadsheet.xls`
 
-`examples/` and `train/` are only for local regression and debugging.
+Within this repository, treat `construction-aduit/` as the local module root. Historical docs may still mention an external runtime workspace; do not use those paths for repo-local editing.
 
 ## Source of Truth
 
-The construction-audit OpenCode source no longer lives in a project-local `.opencode/` directory.
+Repo-local source of truth:
 
-- Agent source: `joinai-expert-agent/construction-aduit/agents/*.md`
-- Skill source: `joinai-expert-agent/construction-aduit/skills/*`
-- User-level runtime registration:
-  - `~/.config/opencode/agents/`
-  - `~/.config/opencode/skills/`
+- Agent source: `agents/*.md`
+- Skill source: `skills/*`
+- GT runtime snapshot and config: `gt/`
 
-Only these three custom agents are part of the construction-audit mainline:
+Local ignored workspace content:
+
+- `docs/`
+- `examples/`
+- `output/`
+
+Only these three custom agents are part of the active construction-audit mainline:
 
 | GT Role | Agent Config Name | OpenCode `--agent` | Source File |
 |---------|-------------------|--------------------|-------------|
-| Mayor | `opencode-construction-audit-orchestrator` | `construction-audit-orchestrator` | `joinai-expert-agent/construction-aduit/agents/construction-audit-orchestrator.md` |
-| Polecat | `opencode-construction-audit-worker` | `construction-audit-worker` | `joinai-expert-agent/construction-aduit/agents/construction-audit-worker.md` |
-| Refinery | `opencode-construction-audit-reviewer` | `construction-audit-reviewer` | `joinai-expert-agent/construction-aduit/agents/construction-audit-reviewer.md` |
+| Mayor | `opencode-construction-audit-orchestrator` | `construction-audit-orchestrator` | `agents/construction-audit-orchestrator.md` |
+| Polecat | `opencode-construction-audit-worker` | `construction-audit-worker` | `agents/construction-audit-worker.md` |
+| Refinery | `opencode-construction-audit-reviewer` | `construction-audit-reviewer` | `agents/construction-audit-reviewer.md` |
 
 Gas Town default witness patrol may still exist at the platform level, but it is not a construction-audit custom agent and is not registered through the construction-audit role map.
 
@@ -46,7 +52,7 @@ The current construction-audit mainline uses these eight skills:
 
 ## Gas Town Workspace
 
-`gt/` is its own Gas Town repository with runtime state, beads, and configuration.
+`gt/` is a nested Gas Town runtime repository. When operating on GT state, use paths under `construction-aduit/gt/`.
 
 Important paths:
 
@@ -70,24 +76,25 @@ This round intentionally does **not** modify `gt/roles/*.toml`. Keep that assump
 
 ## Runtime Notes
 
-- Run git commands for GT only inside `construction-review/gt/`.
+- Run GT git commands only inside `construction-aduit/gt/`.
 - `gt prime` is the runtime identity source; do not infer agent identity from bead text alone.
 - `gt mail check --inject` is the standard mailbox sync hook.
 - Gas Town default witness patrol, if enabled, remains managed by GT defaults and should still use `bd mol wisp`, never `bd mol pour`.
+- Do not treat `docs/`, `examples/`, or `output/` as source-of-truth configuration. They are local archived inputs, notes, and evidence.
 
 ## Common Commands
 
 ```bash
 # GT runtime
-cd gt
+cd construction-aduit/gt
 gt prime
 gt mail check --inject
 gt config agent list
 gt config default-agent
 
 # Validate JSON configs
-python3 -m json.tool gt/settings/config.json
-python3 -m json.tool gt/data-audit/settings/config.json
+python3 -m json.tool construction-aduit/gt/settings/config.json
+python3 -m json.tool construction-aduit/gt/data-audit/settings/config.json
 
 # Inspect user-level registration
 ls -l ~/.config/opencode/agents/construction-audit-*.md
@@ -99,3 +106,4 @@ ls -l ~/.config/opencode/skills/construction-audit-* ~/.config/opencode/skills/g
 - Do not reintroduce a project-local hidden source tree as the construction-audit source of truth.
 - Do not add the retired custom monitor role back into GT role mappings or user-level registration.
 - Keep active docs and GT config aligned with the three-role model.
+- When writing repo-local guidance, prefer module-relative paths such as `agents/...`, `skills/...`, and `gt/...`.
