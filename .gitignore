@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .tasks
+.pytest_cache/
+gt/
+*.log

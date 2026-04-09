@@ -3,8 +3,9 @@ import unittest
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SKILL_PATH = ROOT / ".opencode/skills/construction-audit-qa-checklist/SKILL.md"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+SKILL_PATH = AUDIT_ROOT / "skills/construction-audit-qa-checklist/SKILL.md"
 
 
 def extract_section(markdown: str, title: str) -> str:

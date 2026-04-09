@@ -9,10 +9,12 @@ import openpyxl
 import yaml
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPT = ROOT / ".opencode/skills/construction-audit-s2-workbook-render/scripts/run_workbook_render.py"
-SAMPLE_XLS = ROOT / "train/预算-表一（451定额度折前）/东海县海陵家苑三网小区新建工程-预算（表一451定额度折前有错）.xls"
-RULE_DOC = ROOT / "examples/rules-docx/家客预算审核知识库11.9.docx"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+CONSTRUCTION_REVIEW_ROOT = WORKSPACE_ROOT / "construction-review"
+SCRIPT = AUDIT_ROOT / "skills/construction-audit-s2-workbook-render/scripts/run_workbook_render.py"
+SAMPLE_XLS = CONSTRUCTION_REVIEW_ROOT / "train/预算-表一（451定额度折前）/东海县海陵家苑三网小区新建工程-预算（表一451定额度折前有错）.xls"
+RULE_DOC = CONSTRUCTION_REVIEW_ROOT / "examples/rules-docx/家客预算审核知识库11.9.docx"
 
 
 class RunWorkbookRenderTests(unittest.TestCase):
@@ -24,7 +26,7 @@ class RunWorkbookRenderTests(unittest.TestCase):
             [sys.executable, str(SCRIPT), "--config", str(config_path)],
             capture_output=True,
             text=True,
-            cwd=ROOT,
+            cwd=WORKSPACE_ROOT,
         )
 
     def test_renders_workbook_and_sheet_jsons_from_minimal_config(self):

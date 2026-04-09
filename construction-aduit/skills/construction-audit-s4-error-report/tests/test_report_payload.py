@@ -3,8 +3,9 @@ import sys
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPTS_DIR = ROOT / ".opencode/skills/construction-audit-s4-error-report/scripts"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+SCRIPTS_DIR = AUDIT_ROOT / "skills/construction-audit-s4-error-report/scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 

@@ -57,7 +57,7 @@ description: "工程审核错误报告技能：读取 `findings/*.json` 与 `aud
 ## CLI 入口
 
 ```bash
-python .opencode/skills/construction-audit-s4-error-report/scripts/run_error_report.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s4-error-report/scripts/run_error_report.py \
   --config /abs/path/audit-config.yaml
 ```
 

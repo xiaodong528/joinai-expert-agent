@@ -5,7 +5,25 @@ description: "豆包 TTS 异步长文本合成 + 字幕时间戳生成。Trigger
 
 # Stage 5: TTS 语音合成 + 字幕生成 (Async)
 
-## 用途
+**用途**
+
+## 依赖
+
+- `~/.config/opencode/skills/video-s5-tts/scripts/` 下脚本、模型说明和当前 Stage 输入文件。
+
+## 输入契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 输出契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 执行流程
+
+1. 读取 `Video-Producer-output/{project_id}` 下当前 Stage 需要的输入。
+2. 按下文脚本命令或规则执行当前 Stage。
+3. 核对输出文件后再进入验证清单。
 
 使用豆包 TTS 异步长文本合成 API 为每个场景合成旁白音频，同时通过 `enable_subtitle` 获取句级字幕时间戳，直接生成 SRT 文件。
 此阶段为**可选** — 短剧（带旁白/配音）必需；宣传片/广告和创意短视频跳过。
@@ -147,7 +165,7 @@ timeout: 120 seconds
 ## 脚本
 
 ```bash
-python .opencode/skills/video-s5-tts/scripts/stage5_tts.py \
+python ~/.config/opencode/skills/video-s5-tts/scripts/stage5_tts.py \
   --project-id <project_id> \
   --storyboard Video-Producer-output/<project_id>/scripts/storyboard.yaml \
   --speaker zh_male_ruyayichen_uranus_bigtts
@@ -167,11 +185,11 @@ python .opencode/skills/video-s5-tts/scripts/stage5_tts.py \
 
 ```bash
 # 子智能体 1: 处理场景 1
-python .opencode/skills/video-s5-tts/scripts/stage5_tts.py \
+python ~/.config/opencode/skills/video-s5-tts/scripts/stage5_tts.py \
   --project-id {id} --storyboard ... --scene 1
 
 # 子智能体 N: 处理场景 N（全部同时启动）
-python .opencode/skills/video-s5-tts/scripts/stage5_tts.py \
+python ~/.config/opencode/skills/video-s5-tts/scripts/stage5_tts.py \
   --project-id {id} --storyboard ... --scene {N}
 ```
 

@@ -6,16 +6,18 @@ from pathlib import Path
 import xlwt
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPTS_DIR = ROOT / ".opencode/skills/construction-audit-qa-checklist/scripts"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+CONSTRUCTION_REVIEW_ROOT = WORKSPACE_ROOT / "construction-review"
+SCRIPTS_DIR = AUDIT_ROOT / "skills/construction-audit-qa-checklist/scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from oracle_workbook_diff import diff_sheet_cells
 
 
-CORRECT_XLS = ROOT / "examples/original-xlsx/原-东海县海陵家苑三网小区新建工程-预算（无错误）.xls"
-WRONG_XLS = ROOT / "train/预算-表一（451定额度折前）/东海县海陵家苑三网小区新建工程-预算（表一451定额度折前有错）.xls"
+CORRECT_XLS = CONSTRUCTION_REVIEW_ROOT / "examples/original-xlsx/原-东海县海陵家苑三网小区新建工程-预算（无错误）.xls"
+WRONG_XLS = CONSTRUCTION_REVIEW_ROOT / "train/预算-表一（451定额度折前）/东海县海陵家苑三网小区新建工程-预算（表一451定额度折前有错）.xls"
 
 
 class OracleWorkbookDiffTests(unittest.TestCase):

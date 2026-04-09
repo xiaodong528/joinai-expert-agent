@@ -5,26 +5,44 @@ description: "FFmpeg 视频拼接、音频混合与字幕合并。Triggers on vi
 
 # Stage 7: 视频拼接 + 音频混合 + 字幕合并
 
-## 用途
+**用途**
+
+## 依赖
+
+- `~/.config/opencode/skills/video-s7-concat/scripts/` 下脚本、模型说明和当前 Stage 输入文件。
+
+## 输入契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 输出契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 执行流程
+
+1. 读取 `Video-Producer-output/{project_id}` 下当前 Stage 需要的输入。
+2. 按下文脚本命令或规则执行当前 Stage。
+3. 核对输出文件后再进入验证清单。
 
 将所有分镜片段拼接为一个完整视频，混合 TTS 语音和 BGM 背景音乐，合并各场景 SRT 字幕并嵌入到最终视频。生成 `concat-final.mp4`（含视频+音频+字幕）。
 
 ## 脚本
 
 ```
-.opencode/skills/video-s7-concat/scripts/stage7_concat.py
+~/.config/opencode/skills/video-s7-concat/scripts/stage7_concat.py
 ```
 
 ## 输入/输出契约
 
 | 项目 | 路径 | 说明 |
 |------|------|------|
-| 分镜片段 | `output/{project_id}/clips/scene-{01..N}-final.mp4` | 优先使用 `-final`（含旁白+字幕），回退到 `scene-{N}.mp4` |
-| TTS 音频（可选） | `output/{project_id}/audio/tts-{01..N}.mp3` | 每个分镜的语音 |
-| BGM（可选） | `output/{project_id}/audio/bgm.mp3` | 背景音乐 |
-| 场景字幕 | `output/{project_id}/subtitles/scene-{01..N}.srt` | Stage 5 TTS 生成的逐场景字幕 |
-| **输出视频** | `output/{project_id}/videos/concat-final.mp4` | H.264 + AAC + mov_text 字幕 |
-| **合并字幕** | `output/{project_id}/subtitles/combined.srt` | 全片字幕（时间戳已偏移） |
+| 分镜片段 | `Video-Producer-output/{project_id}/clips/scene-{01..N}-final.mp4` | 优先使用 `-final`（含旁白+字幕），回退到 `scene-{N}.mp4` |
+| TTS 音频（可选） | `Video-Producer-output/{project_id}/audio/tts-{01..N}.mp3` | 每个分镜的语音 |
+| BGM（可选） | `Video-Producer-output/{project_id}/audio/bgm.mp3` | 背景音乐 |
+| 场景字幕 | `Video-Producer-output/{project_id}/subtitles/scene-{01..N}.srt` | Stage 5 TTS 生成的逐场景字幕 |
+| **输出视频** | `Video-Producer-output/{project_id}/videos/concat-final.mp4` | H.264 + AAC + mov_text 字幕 |
+| **合并字幕** | `Video-Producer-output/{project_id}/subtitles/combined.srt` | 全片字幕（时间戳已偏移） |
 
 ## 步骤
 
