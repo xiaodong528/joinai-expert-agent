@@ -5,14 +5,32 @@ description: "SRT 字幕生成与 FFmpeg 烧录，使用 PingFang SC 字体。Tr
 
 # Stage 9: 字幕生成与烧录 (Optional, Recommended)
 
-## 用途
+**用途**
+
+## 依赖
+
+- `~/.config/opencode/skills/video-s9-subtitle/scripts/` 下脚本、模型说明和当前 Stage 输入文件。
+
+## 输入契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 输出契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 执行流程
+
+1. 读取 `Video-Producer-output/{project_id}` 下当前 Stage 需要的输入。
+2. 按下文脚本命令或规则执行当前 Stage。
+3. 核对输出文件后再进入验证清单。
 
 从对白生成 SRT 字幕文件，然后使用 FFmpeg 将字幕烧录到最终视频中。支持两种模式：模式 A（基于脚本，推荐）或模式 B（基于 ASR）。
 
 ## 脚本
 
 ```
-.opencode/skills/video-s9-subtitle/scripts/stage9_subtitle.py
+~/.config/opencode/skills/video-s9-subtitle/scripts/stage9_subtitle.py
 ```
 
 ## 输入/输出契约

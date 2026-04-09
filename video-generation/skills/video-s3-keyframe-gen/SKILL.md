@@ -5,7 +5,25 @@ description: "使用 Seedream txt2img 和 img2img 进行首尾帧锚定链关键
 
 # Stage 3: 关键帧图像生成 (Keyframe Generation)
 
-## 用途
+**用途**
+
+## 依赖
+
+- `~/.config/opencode/skills/video-s3-keyframe-gen/scripts/` 下脚本、模型说明和当前 Stage 输入文件。
+
+## 输入契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 输出契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 执行流程
+
+1. 读取 `Video-Producer-output/{project_id}` 下当前 Stage 需要的输入。
+2. 按下文脚本命令或规则执行当前 Stage。
+3. 核对输出文件后再进入验证清单。
 
 使用 Seedream 4.0 为每个分镜生成关键帧 PNG：一张**首帧**（必需）和一张**尾帧**（可选，当分镜脚本中存在 `末帧图提示词` 时生成）。
 第 1 个分镜的首帧使用 txt2img 生成。后续分镜的首帧使用 img2img，锚定自**上一个分镜的尾帧**（若无尾帧则使用首帧），形成**首尾帧锚定链**以保持视觉连续性。
@@ -13,17 +31,17 @@ description: "使用 Seedream txt2img 和 img2img 进行首尾帧锚定链关键
 ## 输入/输出契约
 
 **输入**
-- `output/{project_id}/scripts/storyboard.yaml` — 包含 `分镜列表[]`，每项含：
+- `Video-Producer-output/{project_id}/scripts/storyboard.yaml` — 包含 `分镜列表[]`，每项含：
   - `编号`: 分镜编号（整数）
   - `文生图提示词`: 首帧图像提示词（包含角色 DNA — 完整重复）
   - `末帧图提示词`: 尾帧图像提示词（可选 — 规则同文生图提示词）
   - `风格锁定.统一风格前缀`: Stage 0 冻结
   - `风格锁定.负面提示词`: Stage 0 冻结
-- `output/{project_id}/characters/{name}-ref.png` — 可选，来自 Stage 2
+- `Video-Producer-output/{project_id}/characters/{name}-ref.png` — 可选，来自 Stage 2
 
 **输出**
-- `output/{project_id}/frames/scene-{01..N}-first.png` — 每个分镜的首帧（始终生成）
-- `output/{project_id}/frames/scene-{01..N}-last.png` — 每个分镜的尾帧（仅当 `末帧图提示词` 存在时生成）
+- `Video-Producer-output/{project_id}/frames/scene-{01..N}-first.png` — 每个分镜的首帧（始终生成）
+- `Video-Producer-output/{project_id}/frames/scene-{01..N}-last.png` — 每个分镜的尾帧（仅当 `末帧图提示词` 存在时生成）
 
 ## API 详情
 
@@ -47,14 +65,14 @@ description: "使用 Seedream txt2img 和 img2img 进行首尾帧锚定链关键
 
 ```bash
 # 全部场景（串行）
-python .opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
+python ~/.config/opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
   --project-id <project_id> \
-  --storyboard output/<project_id>/scripts/storyboard.yaml
+  --storyboard Video-Producer-output/<project_id>/scripts/storyboard.yaml
 
 # 指定范围（分批并行时使用）
-python .opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
+python ~/.config/opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
   --project-id <project_id> \
-  --storyboard output/<project_id>/scripts/storyboard.yaml \
+  --storyboard Video-Producer-output/<project_id>/scripts/storyboard.yaml \
   --start-scene 1 --end-scene 3
 ```
 
@@ -62,7 +80,7 @@ python .opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
 - `--start-scene N`: 从场景 N 开始处理（默认 1）。跳过的场景会读取已有帧作为锚点
 - `--end-scene M`: 处理到场景 M 为止（含）。省略则处理到最后一个场景
 
-批内严格串行（首帧锚定链依赖）。输出写入 `output/{project_id}/frames/scene-{01..N}-first.png` 和 `-last.png`。
+批内严格串行（首帧锚定链依赖）。输出写入 `Video-Producer-output/{project_id}/frames/scene-{01..N}-first.png` 和 `-last.png`。
 
 ## 使用示例
 
@@ -108,7 +126,7 @@ for scene in scenes:
         anchor_url=prev_frame_url,
         scale=0.4,
     )
-    path = f"output/{project_id}/frames/scene-{scene['scene_id']}.png"
+    path = f"Video-Producer-output/{project_id}/frames/scene-{scene['scene_id']}.png"
     Path(path).write_bytes(img_bytes)
     prev_frame_url = upload_to_accessible_url(path)  # for next scene's anchor
 ```
@@ -132,7 +150,7 @@ Scene N  尾帧 → img2img(anchor=scene-N-first, s=0.4)          → scene-N-la
 
 ## 验证清单
 
-- [ ] 所有 `scene-{01..N}-first.png` 文件存在于 `output/{project_id}/frames/` 中
+- [ ] 所有 `scene-{01..N}-first.png` 文件存在于 `Video-Producer-output/{project_id}/frames/` 中
 - [ ] 每个包含 `末帧图提示词` 的分镜均存在对应的 `scene-{01..N}-last.png`
 - [ ] 分辨率为 1920x1080（16:9）
 - [ ] 相邻帧视觉上连贯一致（角色相同、光照方向一致）
@@ -153,15 +171,15 @@ Scene N  尾帧 → img2img(anchor=scene-N-first, s=0.4)          → scene-N-la
 
 ```bash
 # 子智能体 1: 场景 1-3（批内串行）
-python .opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
+python ~/.config/opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
   --project-id {id} --storyboard ... --start-scene 1 --end-scene 3
 
 # 子智能体 2: 场景 4-6（需等待子智能体 1 完成场景 3 的尾帧/首帧）
-python .opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
+python ~/.config/opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
   --project-id {id} --storyboard ... --start-scene 4 --end-scene 6
 
 # 子智能体 3: 场景 7-10
-python .opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
+python ~/.config/opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
   --project-id {id} --storyboard ... --start-scene 7
 ```
 
