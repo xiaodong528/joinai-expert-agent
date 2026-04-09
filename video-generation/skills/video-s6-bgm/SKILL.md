@@ -5,7 +5,25 @@ description: "MiniMax Music 2.5+ 背景音乐生成（纯 instrumental）。Trig
 
 # Stage 6: BGM 与音效（背景音乐，可选/推荐）
 
-## 用途
+**用途**
+
+## 依赖
+
+- `~/.config/opencode/skills/video-s6-bgm/scripts/` 下脚本、模型说明和当前 Stage 输入文件。
+
+## 输入契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 输出契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 执行流程
+
+1. 读取 `Video-Producer-output/{project_id}` 下当前 Stage 需要的输入。
+2. 按下文脚本命令或规则执行当前 Stage。
+3. 核对输出文件后再进入验证清单。
 
 使用 MiniMax Music 2.5+ 为完整视频生成 instrumental 背景音乐。
 此阶段**可选但推荐**用于所有视频类型。
@@ -57,7 +75,7 @@ POST /v1/music_generation → { "data": { "audio": "https://...mp3", "status": 2
 ## 脚本
 
 ```bash
-python .opencode/skills/video-s6-bgm/scripts/stage6_bgm.py \
+python ~/.config/opencode/skills/video-s6-bgm/scripts/stage6_bgm.py \
   --project-id <project_id> \
   --prompt "orchestral instrumental, epic atmosphere" \
   --duration-hint 120

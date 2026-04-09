@@ -5,24 +5,42 @@ description: "ffprobe 技术 QA 检查与结构化 JSON 报告生成。Triggers 
 
 # Stage 10: 质量审查
 
-## 用途
+**用途**
+
+## 依赖
+
+- `~/.config/opencode/skills/video-s10-qa-review/scripts/` 下脚本、模型说明和当前 Stage 输入文件。
+
+## 输入契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 输出契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 执行流程
+
+1. 读取 `Video-Producer-output/{project_id}` 下当前 Stage 需要的输入。
+2. 按下文脚本命令或规则执行当前 Stage。
+3. 核对输出文件后再进入验证清单。
 
 通过 `ffprobe` 运行自动化技术检查，并对最终视频进行 LLM 辅助内容审查。生成结构化 JSON 报告，为每个检查点提供 PASS/WARN/FAIL 状态。
 
 ## 脚本
 
 ```
-.opencode/skills/video-s10-qa-review/scripts/stage10_qa.py
+~/.config/opencode/skills/video-s10-qa-review/scripts/stage10_qa.py
 ```
 
 ## 输入/输出契约
 
 | 项目 | 路径 | 说明 |
 |------|------|------|
-| 最终视频 | `output/{project_id}/videos/final.mp4` | 主要输入 |
-| 分镜脚本 | `output/{project_id}/scripts/storyboard.yaml` | 用于字幕检查的预期对白 |
-| SRT 文件 | `output/{project_id}/subtitles/drama.srt` | 可选 - 用于字幕准确性检查 |
-| **输出** | `output/{project_id}/qa-report.json` | 结构化 QA 结果 |
+| 最终视频 | `Video-Producer-output/{project_id}/videos/final.mp4` | 主要输入 |
+| 分镜脚本 | `Video-Producer-output/{project_id}/scripts/storyboard.yaml` | 用于字幕检查的预期对白 |
+| SRT 文件 | `Video-Producer-output/{project_id}/subtitles/drama.srt` | 可选 - 用于字幕准确性检查 |
+| **输出** | `Video-Producer-output/{project_id}/qa-report.json` | 结构化 QA 结果 |
 
 ## 自动化检查 (ffprobe)
 
@@ -71,7 +89,7 @@ def check_black_frames(video_path: str) -> list[float]:
 ```json
 {
   "project_id": "proj_abc123",
-  "video_path": "output/proj_abc123/videos/final.mp4",
+  "video_path": "Video-Producer-output/proj_abc123/videos/final.mp4",
   "generated_at": "2026-03-21T10:00:00Z",
   "overall": "pass",
   "checks": {

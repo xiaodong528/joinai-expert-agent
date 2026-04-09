@@ -5,23 +5,41 @@ description: "可灵 Lip-Sync API，支持 10 秒分段拆分处理。Triggers o
 
 # Stage 8: 对口型处理 (Optional, Async)
 
-## 用途
+**用途**
+
+## 依赖
+
+- `~/.config/opencode/skills/video-s8-lipsync/scripts/` 下脚本、模型说明和当前 Stage 输入文件。
+
+## 输入契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 输出契约
+
+- 见下方 `## 输入/输出契约` 详细说明。
+
+## 执行流程
+
+1. 读取 `Video-Producer-output/{project_id}` 下当前 Stage 需要的输入。
+2. 按下文脚本命令或规则执行当前 Stage。
+3. 核对输出文件后再进入验证清单。
 
 使用可灵 Lip-Sync API 对包含面部特写和对白的视频片段进行口型同步处理。超过 10 秒的场景必须先拆分、逐段处理，再重新拼接。
 
 ## 脚本
 
 ```
-.opencode/skills/video-s8-lipsync/scripts/stage8_lipsync.py
+~/.config/opencode/skills/video-s8-lipsync/scripts/stage8_lipsync.py
 ```
 
 ## 输入/输出契约
 
 | 项目 | 路径 | 说明 |
 |------|------|------|
-| 输入视频 | `output/{project_id}/videos/concat-raw.mp4` | 或单场景片段 |
-| TTS 音频 | `output/{project_id}/audio/tts-{01..N}.mp3` | 对白音频 |
-| **输出** | `output/{project_id}/videos/lipsync.mp4` | 口型同步后的视频 |
+| 输入视频 | `Video-Producer-output/{project_id}/videos/concat-raw.mp4` | 或单场景片段 |
+| TTS 音频 | `Video-Producer-output/{project_id}/audio/tts-{01..N}.mp3` | 对白音频 |
+| **输出** | `Video-Producer-output/{project_id}/videos/lipsync.mp4` | 口型同步后的视频 |
 
 **仅对以下场景应用**：面部特写镜头 + 有对白台词。跳过远景或无对白场景。
 

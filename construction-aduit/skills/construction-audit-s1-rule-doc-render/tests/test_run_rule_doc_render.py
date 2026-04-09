@@ -11,9 +11,11 @@ from docx import Document
 from openpyxl import Workbook
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPT = ROOT / ".opencode/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_doc_render.py"
-REAL_RULE_DOC = ROOT / "examples/rules-docx/家客预算审核知识库11.9.docx"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+CONSTRUCTION_REVIEW_ROOT = WORKSPACE_ROOT / "construction-review"
+SCRIPT = AUDIT_ROOT / "skills/construction-audit-s1-rule-doc-render/scripts/run_rule_doc_render.py"
+REAL_RULE_DOC = CONSTRUCTION_REVIEW_ROOT / "examples/rules-docx/家客预算审核知识库11.9.docx"
 
 
 def extract_budget_fee_rows(section_text: str) -> list[str]:
@@ -55,7 +57,7 @@ class RunRuleDocRenderTests(unittest.TestCase):
             [sys.executable, str(SCRIPT), "--config", str(config_path)],
             capture_output=True,
             text=True,
-            cwd=ROOT,
+            cwd=WORKSPACE_ROOT,
         )
 
     def test_renders_from_minimal_audit_config(self):
@@ -136,7 +138,7 @@ class RunRuleDocRenderTests(unittest.TestCase):
             tmpdir_path = Path(tmpdir)
             input_path = tmpdir_path / "rule_document.docx"
             spreadsheet_path = tmpdir_path / "spreadsheet.xlsx"
-            s0_script = ROOT / ".opencode/skills/construction-audit-s0-session-init/scripts/session_init.py"
+            s0_script = AUDIT_ROOT / "skills/construction-audit-s0-session-init/scripts/session_init.py"
             output_dir = Path("/tmp") / f"construction-audit-s1-tmp-{uuid4().hex}"
             config_path = output_dir / "audit-config.yaml"
 
@@ -165,7 +167,7 @@ class RunRuleDocRenderTests(unittest.TestCase):
                     ],
                     capture_output=True,
                     text=True,
-                    cwd=ROOT,
+                    cwd=WORKSPACE_ROOT,
                 )
 
                 self.assertEqual(s0_result.returncode, 0, s0_result.stderr)

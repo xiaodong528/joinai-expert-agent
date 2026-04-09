@@ -81,7 +81,7 @@ GT role: `polecat`
 **Skill**: `construction-audit-s1-rule-doc-render`
 
 ```bash
-python .opencode/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_doc_render.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_doc_render.py \
   --config <output_dir>/audit-config.yaml
 ```
 
@@ -90,7 +90,7 @@ python .opencode/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_d
 **Skill**: `construction-audit-s2-workbook-render`
 
 ```bash
-python .opencode/skills/construction-audit-s2-workbook-render/scripts/run_workbook_render.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s2-workbook-render/scripts/run_workbook_render.py \
   --config <output_dir>/audit-config.yaml
 ```
 
@@ -100,7 +100,7 @@ python .opencode/skills/construction-audit-s2-workbook-render/scripts/run_workbo
 
 ```bash
 # 每个 Polecat 只处理一个 sheet：
-python .opencode/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.py \
   --sheet-data <output_dir>/sheets/<sheet>.json \
   --context-sheets-dir <output_dir>/sheets \
   --payload-json '<agent_generated_payload>'
@@ -116,7 +116,7 @@ python .opencode/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.p
 **Skill**: `construction-audit-s4-error-report`
 
 ```bash
-python .opencode/skills/construction-audit-s4-error-report/scripts/run_error_report.py \
+python joinai-expert-agent/construction-aduit/skills/construction-audit-s4-error-report/scripts/run_error_report.py \
   --config <output_dir>/audit-config.yaml
 ```
 

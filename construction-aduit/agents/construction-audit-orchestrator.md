@@ -28,7 +28,7 @@ GT role: `mayor`
 - **通过 `gt sling` 将所有文件读写和脚本执行工作派发给 Polecat**（见下方 GT Sling 调度协议）
 - 监控每个阶段的退出码；任一阶段失败时停止并上报
 - 维护审核会话状态（通过 `audit-config.yaml`）
-- 通过 GT mail 与 Worker/Reviewer/Monitor 通信
+- 通过 GT mail 与 Worker/Reviewer 通信；Gas Town 默认 witness 巡逻不纳入 construction-audit 自定义角色编排
 - **每阶段完成后通知 Refinery review 产出质量**
 - 每个新的审查会话开始时，先根据当前任务摘要生成英文 slug 作为新 rig 名，并先创建/切换到该 rig，再继续 S0-S4
 - rig 的来源由 Mayor 自主选择，但必须在执行记录和最终摘要中说明来源与理由

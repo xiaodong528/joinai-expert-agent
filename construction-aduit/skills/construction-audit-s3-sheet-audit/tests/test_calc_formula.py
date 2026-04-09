@@ -6,8 +6,9 @@ import unittest
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[4]
-SCRIPT = ROOT / ".opencode/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.py"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "joinai-expert-agent/construction-aduit"
+SCRIPT = AUDIT_ROOT / "skills/construction-audit-s3-sheet-audit/scripts/calc_formula.py"
 
 
 class CalcFormulaCliTests(unittest.TestCase):
@@ -46,7 +47,7 @@ class CalcFormulaCliTests(unittest.TestCase):
                 ],
                 capture_output=True,
                 text=True,
-                cwd=ROOT,
+                cwd=WORKSPACE_ROOT,
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -100,7 +101,7 @@ class CalcFormulaCliTests(unittest.TestCase):
                 ],
                 capture_output=True,
                 text=True,
-                cwd=ROOT,
+                cwd=WORKSPACE_ROOT,
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -142,7 +143,7 @@ class CalcFormulaCliTests(unittest.TestCase):
                 ],
                 capture_output=True,
                 text=True,
-                cwd=ROOT,
+                cwd=WORKSPACE_ROOT,
             )
 
             self.assertNotEqual(result.returncode, 0)
