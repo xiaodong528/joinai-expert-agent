@@ -5,3 +5,27 @@ __pycache__/
 .pytest_cache/
 gt/
 *.log
+# Keep repo-local archives and workspace snapshots out of Git by default.
+output/
+.venv/
+.opencode/
+.omc/
+.dolt/
+.dolt-data/
+.dolt-meta/
+.dolt-wal/
+.dolt-wal/
+docs
+examples/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.test
+.env.production
+.env.local
+.env.development.local
+.env.test.local
+.serena
