@@ -10,8 +10,8 @@
 
 这里沉淀的不是某个业务系统本身，而是专家智能体的 3 类核心资产：
 
-- `agents/`：角色智能体定义
-- `skills/`：阶段能力与工作法技能
+- `.opencode/agents/`：角色智能体定义
+- `.opencode/skills/`：阶段能力与工作法技能
 - `gt/`：Gas Town 运行时接入配置
 
 部分目录还保留了 `docs/`、`output/`、`examples/`，用来承载说明文档、运行证据和样例输入。
@@ -53,31 +53,31 @@ JAS 采用 `OpenCode + Gas Town` 的双层架构：
 ```text
 .
 ├── construction-aduit/
-│   ├── agents/
+│   ├── .opencode/
 │   ├── docs/
 │   ├── examples/
 │   ├── gt/
 │   ├── output/
-│   └── skills/
+│   └── ...
 ├── software-prototyper/
-│   ├── agents/
+│   ├── .opencode/
 │   ├── docs/
 │   ├── gt/
 │   ├── output/
-│   └── skills/
+│   └── ...
 └── video-generation/
-    ├── agents/
+    ├── .opencode/
     ├── docs/
     ├── gt/
     ├── output/
-    └── skills/
+    └── ...
 ```
 
 各层职责如下：
 
-- `agents/`
+- `.opencode/agents/`
   存放角色智能体定义，通常对应 Mayor、Polecat、Refinery 三个角色。
-- `skills/`
+- `.opencode/skills/`
   存放阶段技能或工作法技能，约定输入输出、执行步骤、验证清单和失败条件。
 - `docs/`
   存放该方向的项目概览、阶段说明、验证记录、方案文档等。
@@ -157,7 +157,7 @@ JAS 采用 `OpenCode + Gas Town` 的双层架构：
    建立对三条主线、成熟度差异和通用目录分层的整体认知。
 2. 再看各方向的总览文档
    根据你关心的方向进入对应 `docs/`，先理解目标、角色模型和主流程。
-3. 再进入 `agents/` 和 `skills/`
+3. 再进入 `.opencode/agents/` 和 `.opencode/skills/`
    当你要改编排逻辑或某个阶段能力时，再看对应 Agent / Skill 定义。
 4. 最后看 `gt/` 与 `output/`
    当你要接入运行时、复核产物或对照交付证据时，再看 GT 配置与输出目录。
@@ -182,8 +182,8 @@ JAS 采用 `OpenCode + Gas Town` 的双层架构：
 
 这个仓库承载的是 JAS 的专家智能体资产层：
 
-- 用 `agents/` 表达角色职责和协作结构
-- 用 `skills/` 表达阶段能力和执行契约
+- 用 `.opencode/agents/` 表达角色职责和协作结构
+- 用 `.opencode/skills/` 表达阶段能力和执行契约
 - 用 `gt/` 对接 Gas Town 运行时
 - 用 `docs/` 与 `output/` 保存说明、证据和结果
 

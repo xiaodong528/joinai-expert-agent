@@ -9,8 +9,8 @@ The construction audit agent reviews telecom construction budget and settlement 
 
 The active runtime workspace is `construction-review/gt/`, while the OpenCode source of truth lives in the sibling repository:
 
-- Agents: `joinai-expert-agent/construction-aduit/agents/*.md`
-- Skills: `joinai-expert-agent/construction-aduit/skills/*`
+- Agents: `.opencode/agents/*.md`
+- Skills: `.opencode/skills/*`
 
 ## 2. Runtime Roles
 
@@ -138,9 +138,9 @@ User-level runtime registration must point to the sibling source repository:
 
 ### Agents
 
-- `~/.config/opencode/agents/construction-audit-orchestrator.md -> joinai-expert-agent/construction-aduit/agents/construction-audit-orchestrator.md`
-- `~/.config/opencode/agents/construction-audit-worker.md -> joinai-expert-agent/construction-aduit/agents/construction-audit-worker.md`
-- `~/.config/opencode/agents/construction-audit-reviewer.md -> joinai-expert-agent/construction-aduit/agents/construction-audit-reviewer.md`
+- `.opencode/agents/construction-audit-orchestrator.md -> .opencode/agents/construction-audit-orchestrator.md`
+- `.opencode/agents/construction-audit-worker.md -> .opencode/agents/construction-audit-worker.md`
+- `.opencode/agents/construction-audit-reviewer.md -> .opencode/agents/construction-audit-reviewer.md`
 
 ### Skills
 
@@ -159,14 +159,14 @@ Broken links to `construction-review/.opencode/...` are obsolete and should not 
 
 - Do not rename `construction-aduit/` in the sibling repository.
 - Do not modify `gt/roles/*.toml`.
-- Do not restore a project-local hidden source tree as the source of truth.
+- Do not restore user-home registration or external workspace links as the source of truth.
 - Do not reintroduce the retired custom monitor role into GT custom role mappings.
 
 ## 8. Verification
 
 ### Static checks
 
-- No active document should claim that source agents or skills live under a project-local hidden source tree.
+- No active document should claim that source agents or skills still depend on user-home registration or external workspace links.
 - No active construction-audit config should include a custom witness-to-monitor mapping.
 - No active bead should invoke retired skill names.
 
@@ -178,8 +178,8 @@ python3 -m json.tool construction-review/gt/data-audit/settings/config.json
 python3 -m json.tool construction-review/gt/budget_table4_1to8_review/settings/config.json
 
 gt config agent list
-ls -l ~/.config/opencode/agents/construction-audit-*.md
-ls -l ~/.config/opencode/skills/construction-audit-* ~/.config/opencode/skills/gt-*
+ls -l .opencode/agents/construction-audit-*.md
+ls -l .opencode/skills/construction-audit-* .opencode/skills/gt-*
 ```
 
 ### Expected result

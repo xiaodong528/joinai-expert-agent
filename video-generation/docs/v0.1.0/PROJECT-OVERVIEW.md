@@ -79,7 +79,7 @@ OpenCode Agent: video-generation-orchestrator（主编排智能体）
   │ Stage 7-10: 主智能体直接串行执行
   ▼
 11 个 Stage Skill（混合式：指令 + 脚本引用）
-  │ ~/.config/opencode/skills/video-s*/scripts/*.py
+  │ .opencode/skills/video-s*/scripts/*.py
   ▼
 外部 MCP（仅视觉理解 / 网络搜索 / 视频分析）
 ```
@@ -95,9 +95,9 @@ OpenCode Agent: video-generation-orchestrator（主编排智能体）
 
 | 阶段 | 子任务 | 产出 |
 |------|--------|------|
-| API 验证 | 3 (Phase 2) | `~/.config/opencode/skills/video-s*/scripts/*.py` |
-| Skill 封装 | 3 (Phase 3 后) | `~/.config/opencode/skills/video-s{0..10}-*/SKILL.md` |
-| Agent 定义 | 4 | `joinai-expert-agent/video-generation/agents/video-generation-orchestrator.md` |
+| API 验证 | 3 (Phase 2) | `.opencode/skills/video-s*/scripts/*.py` |
+| Skill 封装 | 3 (Phase 3 后) | `.opencode/skills/video-s{0..10}-*/SKILL.md` |
+| Agent 定义 | 4 | `.opencode/agents/video-generation-orchestrator.md` |
 | GasTown 集成 | 5 | `gastown/mayor-video-orchestration.md` + `beads/*.md` |
 
 ---
@@ -116,9 +116,9 @@ OpenCode Agent: video-generation-orchestrator（主编排智能体）
 
 ## 4. 实现产物清单
 
-### Python 脚本（`~/.config/opencode/skills/video-s*/scripts/`）
+### Python 脚本（`.opencode/skills/video-s*/scripts/`）
 
-每个 Stage Skill 自带独立脚本和 `api_client.py`（不共享），路径格式为 `~/.config/opencode/skills/video-s{N}-{name}/scripts/`。
+每个 Stage Skill 自带独立脚本和 `api_client.py`（不共享），路径格式为 `.opencode/skills/video-s{N}-{name}/scripts/`。
 
 | 脚本 | Skill 目录 | 用途 |
 |------|-----------|------|
@@ -132,7 +132,7 @@ OpenCode Agent: video-generation-orchestrator（主编排智能体）
 | `stage9_subtitle.py` | `video-s9-subtitle` | 字幕生成（SRT）+ FFmpeg 烧录 |
 | `stage10_qa.py` | `video-s10-qa-review` | ffprobe QA 检查 + JSON 报告 |
 
-### OpenCode Skills（`~/.config/opencode/skills/`）
+### OpenCode Skills（`.opencode/skills/`）
 
 11 个 SKILL.md（video-s0 through video-s10），每个包含 I/O 契约、关键参数、验证清单。
 

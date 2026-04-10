@@ -6,9 +6,9 @@ This file provides guidance when working with the `software-prototyper/` module 
 
 This module keeps the software-prototyper source and runtime snapshot together under one repo-local root:
 
-- `agents/`
+- `.opencode/agents/`
   Source-of-truth agent definitions.
-- `skills/`
+- `.opencode/skills/`
   Stage skills and working-method skills.
 - `gt/`
   Gas Town runtime config, rigs, beads, and role overrides.
@@ -46,11 +46,11 @@ GT configuration under `gt/` maps the three GT roles to those three agents.
 
 ## Source Of Truth
 
-- Agent source: `agents/*.md`
-- Skill source: `skills/*`
+- Agent source: `.opencode/agents/*.md`
+- Skill source: `.opencode/skills/*`
 - GT runtime snapshot: `gt/`
 
-The project includes vendored local skills for execution workflows and GT operations directly under `skills/`.
+The project includes vendored local skills for execution workflows and GT operations directly under `.opencode/skills/`.
 
 ## Output Contract
 
