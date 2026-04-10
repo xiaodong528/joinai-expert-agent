@@ -4,7 +4,7 @@
 
 This repository stores JAS expert-agent assets, not a single runnable app. Work is organized by domain:
 
-- `construction-aduit/`, `software-prototyper/`, `video-generation/`: domain modules with their own `.opencode/`, `docs/`, `gt/`, and `output/` folders.
+- `construction-aduit/`, `software-prototyper/`, `video-generation/`: domain modules with their own `.opencode/agents/`, `.opencode/skills/`, `docs/`, `gt/`, and `output/` folders.
 - `*/.opencode/agents/*.md`: source-of-truth agent definitions.
 - `*/.opencode/skills/*/SKILL.md`: staged skill definitions; helper scripts usually live under `scripts/`, and tests under `tests/`.
 - `README.md`: repository-level overview.
@@ -43,5 +43,5 @@ There is no monolithic root build. Validate only the area you touch.
 
 ## Security & Configuration Tips
 
-- Never commit secrets, `.env*`, generated runtime state, or GT runtime `.opencode/` artifacts created under nested runtime workspaces.
-- Treat `gt/` as environment-sensitive; verify role mappings and discovery boundaries before changing runtime docs.
+- Never commit secrets, `.env*`, or generated runtime state such as `.opencode/node_modules/`, lockfiles, cache files, and `__pycache__/`.
+- Treat `gt/` and project-local `.opencode/` registrations as environment-sensitive; verify paths and role mappings before changing runtime docs.

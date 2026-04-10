@@ -10,9 +10,8 @@ from docx import Document
 import yaml
 
 
-REPO_ROOT = Path(__file__).resolve().parents[5]
-WORKSPACE_ROOT = REPO_ROOT
-AUDIT_ROOT = REPO_ROOT / "construction-aduit"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "construction-aduit"
 S4_SCRIPT = AUDIT_ROOT / ".opencode/skills/construction-audit-s4-error-report/scripts/run_error_report.py"
 
 

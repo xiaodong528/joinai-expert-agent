@@ -9,10 +9,9 @@ import openpyxl
 import xlwt
 
 
-REPO_ROOT = Path(__file__).resolve().parents[5]
-WORKSPACE_ROOT = REPO_ROOT
-AUDIT_ROOT = REPO_ROOT / "construction-aduit"
-CONSTRUCTION_REVIEW_ROOT = REPO_ROOT.parent / "construction-review"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "construction-aduit"
+CONSTRUCTION_REVIEW_ROOT = WORKSPACE_ROOT / "construction-review"
 SCRIPT = AUDIT_ROOT / ".opencode/skills/construction-audit-s2-workbook-render/scripts/spreadsheet_reader.py"
 SAMPLE_XLS = CONSTRUCTION_REVIEW_ROOT / "train/预算-表一（451定额度折前）/东海县海陵家苑三网小区新建工程-预算（表一451定额度折前有错）.xls"
 

@@ -11,10 +11,9 @@ from docx import Document
 from openpyxl import Workbook
 
 
-REPO_ROOT = Path(__file__).resolve().parents[5]
-WORKSPACE_ROOT = REPO_ROOT
-AUDIT_ROOT = REPO_ROOT / "construction-aduit"
-CONSTRUCTION_REVIEW_ROOT = REPO_ROOT.parent / "construction-review"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "construction-aduit"
+CONSTRUCTION_REVIEW_ROOT = WORKSPACE_ROOT / "construction-review"
 SCRIPT = AUDIT_ROOT / ".opencode/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_doc_render.py"
 REAL_RULE_DOC = CONSTRUCTION_REVIEW_ROOT / "examples/rules-docx/家客预算审核知识库11.9.docx"
 

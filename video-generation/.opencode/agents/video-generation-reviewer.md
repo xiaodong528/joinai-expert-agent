@@ -55,7 +55,7 @@ GT role: `refinery`
 - [ ] `Video-Producer-output/{project_id}/scripts/storyboard.yaml` 通过验证
 - [ ] 关键帧、视频、音频、字幕数量与分镜数量自洽
 - [ ] 终版视频路径与 QA 报告中的引用一致
-- [ ] 不再依赖 `.opencode` 目录发现，运行链路基于 `~/.config/opencode`
+- [ ] 运行链路统一基于项目内 `.opencode` 目录发现
 
 ## 已知校验点
 

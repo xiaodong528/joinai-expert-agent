@@ -4,8 +4,8 @@ from pathlib import Path
 
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
-MODULE_ROOT = WORKSPACE_ROOT / "software-prototyper"
-SKILL_PATH = MODULE_ROOT / ".opencode/skills/software-prototyper-gt-mail-comm/SKILL.md"
+AUDIT_ROOT = WORKSPACE_ROOT / "construction-aduit"
+SKILL_PATH = AUDIT_ROOT / ".opencode/skills/gt-mail-comm/SKILL.md"
 
 
 class GtMailCommSkillContractTests(unittest.TestCase):
@@ -13,7 +13,7 @@ class GtMailCommSkillContractTests(unittest.TestCase):
         self.assertTrue(SKILL_PATH.exists(), f"missing skill file: {SKILL_PATH}")
         content = SKILL_PATH.read_text(encoding="utf-8")
 
-        self.assertIn("name: software-prototyper-gt-mail-comm", content)
+        self.assertIn("name: gt-mail-comm", content)
         self.assertIn("## 依赖", content)
         self.assertIn("## 输入契约（Input Contract）", content)
         self.assertIn("## 输出契约（Output Contract）", content)

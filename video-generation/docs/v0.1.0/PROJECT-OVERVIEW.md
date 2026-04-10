@@ -97,7 +97,7 @@ OpenCode Agent: video-generation-orchestrator（主编排智能体）
 |------|--------|------|
 | API 验证 | 3 (Phase 2) | `.opencode/skills/video-s*/scripts/*.py` |
 | Skill 封装 | 3 (Phase 3 后) | `.opencode/skills/video-s{0..10}-*/SKILL.md` |
-| Agent 定义 | 4 | `.opencode/agents/video-generation-orchestrator.md` |
+| Agent 定义 | 4 | `video-generation/.opencode/agents/video-generation-orchestrator.md` |
 | GasTown 集成 | 5 | `gastown/mayor-video-orchestration.md` + `beads/*.md` |
 
 ---

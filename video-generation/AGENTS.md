@@ -17,7 +17,7 @@ This module keeps the video-generation source and runtime snapshot together unde
 - `output/`
   Ignored local archive / sample directory inside the repository.
 
-Runtime discovery now depends on the module-local `.opencode/` folder:
+Runtime discovery uses the module-local `.opencode/` tree:
 
 - `.opencode/agents/video-generation-*.md`
 - `.opencode/skills/video-*`
@@ -41,17 +41,11 @@ GT configuration under `gt/` maps the three GT roles to those three OpenCode age
 
 ## Running Stage Scripts
 
-Stage source files live in `.opencode/skills/`, and runtime commands should use the nearest module-local `.opencode` root:
+Stage source files live in `.opencode/skills/`, and runtime commands should use project-local paths:
 
 ```bash
-OPENCODE_ROOT="$(pwd)"
-while [ ! -d "$OPENCODE_ROOT/.opencode" ] && [ "$OPENCODE_ROOT" != "/" ]; do
-  OPENCODE_ROOT="$(dirname "$OPENCODE_ROOT")"
-done
-OPENCODE_ROOT="$OPENCODE_ROOT/.opencode"
-
-PYTHONPATH="$OPENCODE_ROOT/skills/video-s2-character-anchor/scripts" \
-python "$OPENCODE_ROOT/skills/video-s2-character-anchor/scripts/stage2_seedream.py" \
+PYTHONPATH=.opencode/skills/video-s2-character-anchor/scripts \
+python .opencode/skills/video-s2-character-anchor/scripts/stage2_seedream.py \
   --project-id test-001 \
   --story Video-Producer-output/test-001/scripts/story.yaml
 ```
@@ -85,6 +79,6 @@ Repo-local `video-generation/output/` is only an ignored archive / sample direct
 ## Editing Rules
 
 - If you update a stage skill, also update the corresponding GT bead instructions when runtime commands change.
-- Keep all runtime examples pointed at the nearest module-local `.opencode/skills/...`.
+- Keep all runtime examples pointed at `.opencode/skills/...`.
 - Do not reintroduce the retired single-agent entrypoint, hidden in-repo skill paths, or legacy patrol wording into active runtime docs or configs.
 - Use `video-generation-qa-checklist` for reviewer-facing acceptance and phase review guidance.

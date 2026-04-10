@@ -8,10 +8,9 @@ from pathlib import Path
 import yaml
 
 
-REPO_ROOT = Path(__file__).resolve().parents[5]
-WORKSPACE_ROOT = REPO_ROOT
-AUDIT_ROOT = REPO_ROOT / "construction-aduit"
-CONSTRUCTION_REVIEW_ROOT = REPO_ROOT.parent / "construction-review"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "construction-aduit"
+CONSTRUCTION_REVIEW_ROOT = WORKSPACE_ROOT / "construction-review"
 S1_SCRIPT = AUDIT_ROOT / ".opencode/skills/construction-audit-s1-rule-doc-render/scripts/run_rule_doc_render.py"
 S2_SCRIPT = AUDIT_ROOT / ".opencode/skills/construction-audit-s2-workbook-render/scripts/run_workbook_render.py"
 RULE_DOC = CONSTRUCTION_REVIEW_ROOT / "examples/rules-docx/家客预算审核知识库11.9.docx"

@@ -67,7 +67,7 @@ specified in the instructions above.
 
 This approach compensates for Codex's plugin system not yet supporting an `agents`
 field in `plugin.json`. When `RawPluginManifest` gains an `agents` field, the
-plugin can symlink to `agents/` (mirroring the existing `skills/` symlink) and
+plugin can symlink to `.opencode/agents/` (mirroring the existing `.opencode/skills/` symlink) and
 skills can dispatch named agent types directly.
 
 ## Environment Detection

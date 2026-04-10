@@ -79,7 +79,6 @@ This round intentionally does **not** modify `gt/roles/*.toml`. Keep that assump
 - Run GT git commands only inside `construction-aduit/gt/`.
 - `gt prime` is the runtime identity source; do not infer agent identity from bead text alone.
 - `gt mail check --inject` is the standard mailbox sync hook.
-- `construction-aduit/gt` is a nested Git root, so discovery depends on `construction-aduit/gt/.opencode -> ../.opencode`.
 - Gas Town default witness patrol, if enabled, remains managed by GT defaults and should still use `bd mol wisp`, never `bd mol pour`.
 - Do not treat `docs/`, `examples/`, or `output/` as source-of-truth configuration. They are local archived inputs, notes, and evidence.
 
@@ -97,15 +96,14 @@ gt config default-agent
 python3 -m json.tool construction-aduit/gt/settings/config.json
 python3 -m json.tool construction-aduit/gt/data-audit/settings/config.json
 
-# Inspect module-level registration
+# Inspect project-local registration
 ls -l construction-aduit/.opencode/agents/construction-audit-*.md
-ls -l construction-aduit/.opencode/skills/construction-audit-* construction-aduit/.opencode/skills/gt-*
-ls -ld construction-aduit/gt/.opencode
+find construction-aduit/.opencode/skills -maxdepth 1 -mindepth 1 -type d | sort
 ```
 
 ## Constraints
 
-- Do not reintroduce user-home OpenCode registration as the primary construction-audit runtime contract.
-- Do not add the retired custom monitor role back into GT role mappings or project-level agent registration.
+- Keep project-local `.opencode/agents` and `.opencode/skills` as the construction-audit source of truth.
+- Do not add the retired custom monitor role back into GT role mappings or `.opencode/agents/`.
 - Keep active docs and GT config aligned with the three-role model.
 - When writing repo-local guidance, prefer module-relative paths such as `.opencode/agents/...`, `.opencode/skills/...`, and `gt/...`.

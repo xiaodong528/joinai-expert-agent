@@ -3,9 +3,8 @@ import unittest
 from pathlib import Path
 
 
-REPO_ROOT = Path(__file__).resolve().parents[5]
-WORKSPACE_ROOT = REPO_ROOT
-AUDIT_ROOT = REPO_ROOT / "construction-aduit"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "construction-aduit"
 SKILL_PATH = AUDIT_ROOT / ".opencode/skills/construction-audit-qa-checklist/SKILL.md"
 
 

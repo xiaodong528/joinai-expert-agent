@@ -57,7 +57,7 @@ description: "AI 视频生成阶段审查与最终验收清单。Triggers on vid
 ## 验证清单
 
 - [ ] 所有运行时路径都指向 `Video-Producer-output/{project_id}`
-- [ ] 不再依赖 `.opencode` 目录做 Agent / Skill 发现
+- [ ] Agent / Skill 发现统一依赖项目内 `.opencode` 目录
 - [ ] 分镜、关键帧、视频、音频、字幕与 QA 报告链路闭合
 - [ ] 无旧单编排入口、旧隐藏 Skill 路径、非规范输出根目录或旧巡检角色残留
 - [ ] 最终 review 结论可直接用于继续执行或阻塞交付

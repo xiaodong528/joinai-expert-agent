@@ -7,10 +7,10 @@ The construction audit agent reviews telecom construction budget and settlement 
 - Input 1: `rule_document.docx`
 - Input 2: `spreadsheet.xlsx` / `spreadsheet.xls`
 
-The active runtime workspace is `construction-review/gt/`, while the OpenCode source of truth lives in the sibling repository:
+The repo-local runtime workspace is `construction-aduit/gt/`, and the OpenCode source of truth lives in this module:
 
-- Agents: `.opencode/agents/*.md`
-- Skills: `.opencode/skills/*`
+- Agents: `construction-aduit/.opencode/agents/*.md`
+- Skills: `construction-aduit/.opencode/skills/*`
 
 ## 2. Runtime Roles
 
@@ -103,11 +103,11 @@ Responsibilities:
 
 ### 5.1 Active Config Targets
 
-- `construction-review/gt/settings/config.json`
-- `construction-review/gt/mayor/settings/config.json`
-- `construction-review/gt/data-audit/settings/config.json`
-- `construction-review/gt/budget_table4_1to8_review/settings/config.json`
-- `construction-review/gt/budget_table4_1to8_review/polecats/rust/budget_table4_1to8_review/settings/config.json`
+- `construction-aduit/gt/settings/config.json`
+- `construction-aduit/gt/mayor/settings/config.json`
+- `construction-aduit/gt/data-audit/settings/config.json`
+- `construction-aduit/gt/budget_table4_1to8_review/settings/config.json`
+- `construction-aduit/gt/budget_table4_1to8_review/polecats/rust/budget_table4_1to8_review/settings/config.json`
 
 Each active construction-audit config should map only:
 
@@ -138,9 +138,9 @@ User-level runtime registration must point to the sibling source repository:
 
 ### Agents
 
-- `.opencode/agents/construction-audit-orchestrator.md -> .opencode/agents/construction-audit-orchestrator.md`
-- `.opencode/agents/construction-audit-worker.md -> .opencode/agents/construction-audit-worker.md`
-- `.opencode/agents/construction-audit-reviewer.md -> .opencode/agents/construction-audit-reviewer.md`
+- `.opencode/agents/construction-audit-orchestrator.md`
+- `.opencode/agents/construction-audit-worker.md`
+- `.opencode/agents/construction-audit-reviewer.md`
 
 ### Skills
 
@@ -153,29 +153,29 @@ User-level runtime registration must point to the sibling source repository:
 - `gt-mail-comm`
 - `gt-status-report`
 
-Broken links to `construction-review/.opencode/...` are obsolete and should not remain in the active runtime chain.
+Broken links to retired top-level `agents/` / `skills/` directories are obsolete and should not remain in the active runtime chain.
 
 ## 7. Non-Goals in This Round
 
-- Do not rename `construction-aduit/` in the sibling repository.
+- Do not rename `construction-aduit/` in this repository.
 - Do not modify `gt/roles/*.toml`.
-- Do not restore user-home registration or external workspace links as the source of truth.
+- Keep `.opencode/agents/` and `.opencode/skills/` as the project-local source of truth.
 - Do not reintroduce the retired custom monitor role into GT custom role mappings.
 
 ## 8. Verification
 
 ### Static checks
 
-- No active document should claim that source agents or skills still depend on user-home registration or external workspace links.
+- No active document should point source agents or skills back to retired top-level `agents/` / `skills/` directories.
 - No active construction-audit config should include a custom witness-to-monitor mapping.
 - No active bead should invoke retired skill names.
 
 ### Validation commands
 
 ```bash
-python3 -m json.tool construction-review/gt/settings/config.json
-python3 -m json.tool construction-review/gt/data-audit/settings/config.json
-python3 -m json.tool construction-review/gt/budget_table4_1to8_review/settings/config.json
+python3 -m json.tool construction-aduit/gt/settings/config.json
+python3 -m json.tool construction-aduit/gt/data-audit/settings/config.json
+python3 -m json.tool construction-aduit/gt/budget_table4_1to8_review/settings/config.json
 
 gt config agent list
 ls -l .opencode/agents/construction-audit-*.md
@@ -185,5 +185,5 @@ ls -l .opencode/skills/construction-audit-* .opencode/skills/gt-*
 ### Expected result
 
 - The runtime chain is fully aligned on the three-role model.
-- User-level registration points to `joinai-expert-agent/construction-aduit/...`.
+- Project-local registration points to `construction-aduit/.opencode/...`.
 - Gas Town default witness remains a platform-level patrol concern only.

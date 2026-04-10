@@ -6,10 +6,9 @@ from pathlib import Path
 import xlwt
 
 
-REPO_ROOT = Path(__file__).resolve().parents[5]
-WORKSPACE_ROOT = REPO_ROOT
-AUDIT_ROOT = REPO_ROOT / "construction-aduit"
-CONSTRUCTION_REVIEW_ROOT = REPO_ROOT.parent / "construction-review"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[5]
+AUDIT_ROOT = WORKSPACE_ROOT / "construction-aduit"
+CONSTRUCTION_REVIEW_ROOT = WORKSPACE_ROOT / "construction-review"
 SCRIPTS_DIR = AUDIT_ROOT / ".opencode/skills/construction-audit-qa-checklist/scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))

@@ -213,7 +213,8 @@ def ensure_rule_doc_markdown(config: dict[str, Any], construction_audit_root: Pa
     if markdown_path.is_file() and markdown_path.stat().st_size > 0:
         return markdown_path
     render_script = (
-        construction_audit_root / "skills/construction-audit-s1-rule-doc-render/scripts/render_rule_doc_markdown.sh"
+        construction_audit_root
+        / ".opencode/skills/construction-audit-s1-rule-doc-render/scripts/render_rule_doc_markdown.sh"
     )
     run_subprocess([str(render_script), str(rule_doc_path), str(markdown_path)], cwd=workdir)
     return markdown_path

@@ -2,12 +2,12 @@
 
 ## 1. Current Goal
 
-`construction-review/` is the Gas Town runtime workspace for the construction audit expert agent. It does not own the OpenCode agent/skill source anymore. The active source of truth is:
+`construction-aduit/` is the repo-local module root for the construction audit expert agent. Its nested `gt/` directory is the Gas Town runtime workspace, and the active source of truth is:
 
-- Agents: `.opencode/agents/*.md`
-- Skills: `.opencode/skills/*`
+- Agents: `construction-aduit/.opencode/agents/*.md`
+- Skills: `construction-aduit/.opencode/skills/*`
 
-Runtime discovery is provided by the project-local `.opencode/` tree:
+Runtime discovery is provided by the module-local `.opencode/` tree:
 
 - `.opencode/agents/`
 - `.opencode/skills/`
@@ -70,9 +70,9 @@ All active construction-audit role maps should contain only:
 
 These beads should reference only the active S0-S4 skill names and the three custom roles above.
 
-## 5. Project-Level Registration
+## 5. Project-Local Registration
 
-The construction-audit runtime should expose only these project-level definitions:
+The construction-audit runtime should expose only these project-local entries:
 
 ### Agents
 
@@ -91,14 +91,14 @@ The construction-audit runtime should expose only these project-level definition
 - `gt-mail-comm`
 - `gt-status-report`
 
-Broken links pointing to `construction-review/.opencode/...` are obsolete and should be replaced with links to `.opencode/...`.
+Broken links pointing to retired top-level `agents/` / `skills/` directories are obsolete and should be replaced with `.opencode/...` paths.
 
 ## 6. Verification Checklist
 
 ### Static checks
 
 - No active document or bead should mention retired custom roles or retired skill names.
-- No active document should claim that construction-audit source files still depend on user-home registration or external workspaces.
+- No active document should point construction-audit source files back to retired top-level `agents/` / `skills/` directories.
 
 ### Runtime checks
 
@@ -117,6 +117,6 @@ ls -l .opencode/skills/construction-audit-* .opencode/skills/gt-*
 ### Expected state
 
 - Exactly 3 construction-audit custom agents are registered in GT.
-- Exactly 3 construction-audit agent definitions exist in `.opencode/agents/`.
-- Exactly 8 construction-audit / GT skill definitions exist in `.opencode/skills/`.
-- Active docs, GT configs, project-level definitions, and GT custom agent registry all point to the same three-role model.
+- Exactly 3 construction-audit agent files exist in `.opencode/agents/`.
+- Exactly 8 construction-audit / GT skill directories exist in `.opencode/skills/`.
+- Active docs, GT configs, project-local paths, and GT custom agent registry all point to the same three-role model.
