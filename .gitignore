@@ -8,8 +8,6 @@ gt/
 # Keep repo-local archives and workspace snapshots out of Git by default.
 output/
 .venv/
-.opencode/
-.omc/
 .dolt/
 .dolt-data/
 .dolt-meta/
