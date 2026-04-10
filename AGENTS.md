@@ -4,9 +4,9 @@
 
 This repository stores JAS expert-agent assets, not a single runnable app. Work is organized by domain:
 
-- `construction-aduit/`, `software-prototyper/`, `video-generation/`: domain modules with their own `agents/`, `skills/`, `docs/`, `gt/`, and `output/` folders.
-- `*/agents/*.md`: source-of-truth agent definitions.
-- `*/skills/*/SKILL.md`: staged skill definitions; helper scripts usually live under `scripts/`, and tests under `tests/`.
+- `construction-aduit/`, `software-prototyper/`, `video-generation/`: domain modules with their own `.opencode/agents/`, `.opencode/skills/`, `docs/`, `gt/`, and `output/` folders.
+- `*/.opencode/agents/*.md`: source-of-truth agent definitions.
+- `*/.opencode/skills/*/SKILL.md`: staged skill definitions; helper scripts usually live under `scripts/`, and tests under `tests/`.
 - `README.md`: repository-level overview.
 
 When you enter a module, read its local `AGENTS.md` first; module-specific runtime and output rules override root-level guidance.
@@ -16,7 +16,7 @@ When you enter a module, read its local `AGENTS.md` first; module-specific runti
 There is no monolithic root build. Validate only the area you touch.
 
 - `python -m pytest -q --import-mode=importlib`: run the repository’s Python test suites.
-- `pytest construction-aduit/skills/<skill-name>/tests -q`: run one skill’s focused tests during iteration.
+- `pytest construction-aduit/.opencode/skills/<skill-name>/tests -q`: run one skill’s focused tests during iteration.
 - `python3 -m json.tool construction-aduit/gt/settings/config.json`: validate edited Gas Town JSON config files.
 - `rg --files construction-aduit video-generation software-prototyper`: quickly inspect asset locations before editing.
 
@@ -29,7 +29,7 @@ There is no monolithic root build. Validate only the area you touch.
 
 ## Testing Guidelines
 
-- Put tests next to the skill they protect, usually under `*/skills/<skill>/tests/`.
+- Put tests next to the skill they protect, usually under `*/.opencode/skills/<skill>/tests/`.
 - Add or update tests whenever you change `scripts/`, parsing logic, or output contracts.
 - Aim for at least 80% coverage on touched logic, and run the smallest relevant suite before broader validation.
 - For config-only changes, pair a syntax check (`json.tool`) with a brief manual review of the affected bead/role mapping.
@@ -43,5 +43,5 @@ There is no monolithic root build. Validate only the area you touch.
 
 ## Security & Configuration Tips
 
-- Never commit secrets, `.env*`, generated runtime state, or `.opencode/` artifacts.
-- Treat `gt/` and user-level OpenCode registrations as environment-sensitive; verify paths and role mappings before changing runtime docs.
+- Never commit secrets, `.env*`, or generated runtime state such as `.opencode/node_modules/`, lockfiles, cache files, and `__pycache__/`.
+- Treat `gt/` and project-local `.opencode/` registrations as environment-sensitive; verify paths and role mappings before changing runtime docs.

@@ -6,7 +6,7 @@
 >
 > 文档目标：用一个真实案例说明 JAS 中 `master`、`worker`、`reviewer` 如何把知识库 `docx` 规则映射到预算 `xls/xlsx`，识别错误并输出结果
 >
-> 样例证据包：`construction-review/construction-aduit-output/20260408-archive-oracle-verify`
+> 样例证据包：`construction-aduit/output/20260408-archive-oracle-verify`
 
 ## 1. 背景与目标
 

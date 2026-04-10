@@ -17,8 +17,8 @@ For repo-local work, treat `construction-aduit/` as the workspace root. Historic
 
 Repo-local source of truth:
 
-- Agents: `agents/*.md`
-- Skills: `skills/*`
+- Agents: `.opencode/agents/*.md`
+- Skills: `.opencode/skills/*`
 - GT runtime snapshot: `gt/`
 
 Ignored local workspace content:
@@ -31,9 +31,9 @@ The construction-audit mainline registers exactly three custom agents:
 
 | GT Role | Agent Config Name | OpenCode `--agent` | Source File |
 |---------|-------------------|--------------------|-------------|
-| Mayor | `opencode-construction-audit-orchestrator` | `construction-audit-orchestrator` | `agents/construction-audit-orchestrator.md` |
-| Polecat | `opencode-construction-audit-worker` | `construction-audit-worker` | `agents/construction-audit-worker.md` |
-| Refinery | `opencode-construction-audit-reviewer` | `construction-audit-reviewer` | `agents/construction-audit-reviewer.md` |
+| Mayor | `opencode-construction-audit-orchestrator` | `construction-audit-orchestrator` | `.opencode/agents/construction-audit-orchestrator.md` |
+| Polecat | `opencode-construction-audit-worker` | `construction-audit-worker` | `.opencode/agents/construction-audit-worker.md` |
+| Refinery | `opencode-construction-audit-reviewer` | `construction-audit-reviewer` | `.opencode/agents/construction-audit-reviewer.md` |
 
 Gas Town default witness patrol remains a platform concern and is not part of the construction-audit custom role map.
 
@@ -94,13 +94,13 @@ gt config default-agent
 python3 -m json.tool construction-aduit/gt/settings/config.json
 python3 -m json.tool construction-aduit/gt/data-audit/settings/config.json
 
-ls -l ~/.config/opencode/agents/construction-audit-*.md
-ls -l ~/.config/opencode/skills/construction-audit-* ~/.config/opencode/skills/gt-*
+ls -l construction-aduit/.opencode/agents/construction-audit-*.md
+find construction-aduit/.opencode/skills -maxdepth 1 -mindepth 1 -type d | sort
 ```
 
 ## Constraints
 
-- Do not treat a local hidden source directory as the construction-audit source of truth.
+- Keep project-local `.opencode/agents` and `.opencode/skills` as the construction-audit source of truth.
 - Do not re-register the retired custom monitor role as a construction-audit custom role.
-- Keep active docs, GT configs, and user-level registration in sync with the three-role model.
+- Keep active docs, GT configs, and project-local registration in sync with the three-role model.
 - Prefer module-relative repo paths in local guidance.

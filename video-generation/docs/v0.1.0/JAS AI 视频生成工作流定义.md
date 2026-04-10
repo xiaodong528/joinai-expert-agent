@@ -770,21 +770,16 @@ scripts/*.py（执行层）
 ### 文件组织
 
 ```
-templates/ai-video-generation/
+video-generation/
 ├── .opencode/
-│   ├── agent/
+│   ├── agents/
 │   │   └── video-generation-orchestrator.md          # Agent 定义（system prompt + 编排逻辑）
-│   └── skill/
-│       └── video-s{0..10}-*.md        # 11 个 Stage Skill
-├── scripts/                            # Python 脚本（Skill 引用）
-│   ├── common/
-│   │   ├── api_client.py              # 统一 HTTP 客户端（auth, retry）
-│   │   └── async_poller.py            # submit→poll→download 通用轮询器
-│   └── stage{2..10}_*.py              # 各阶段执行脚本
+│   └── skills/
+│       └── video-s{0..10}-*/          # 11 个 Stage Skill 目录
 ├── Video-Producer-output/{project_id}/               # 中间产物
-└── gastown/                            # Mayor prompt + Bead 模板
-    ├── mayor-video-orchestration.md
-    └── beads/                          # Wave 1/2/3 各 Bead prompt
+└── gt/                                 # Mayor prompt + Bead 模板
+    ├── mayor/
+    └── gastown/beads/                  # Wave 1/2/3 各 Bead prompt
 ```
 
 ### 渐进演进路径

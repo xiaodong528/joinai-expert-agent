@@ -8,8 +8,14 @@ gt/
 # Keep repo-local archives and workspace snapshots out of Git by default.
 output/
 .venv/
-.opencode/
-.omc/
+**/.opencode/node_modules/
+**/.opencode/package.json
+**/.opencode/package-lock.json
+**/.opencode/bun.lock
+**/.opencode/.gitignore
+**/.opencode/.DS_Store
+**/.opencode/**/.DS_Store
+**/.opencode/**/__pycache__/
 .dolt/
 .dolt-data/
 .dolt-meta/

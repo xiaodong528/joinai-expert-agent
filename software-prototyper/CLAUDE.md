@@ -17,8 +17,8 @@ Parallel execution plane: multiple Polecat sessions
 
 Within this repository, use these paths directly:
 
-- Agents: `agents/*.md`
-- Skills: `skills/*`
+- Agents: `.opencode/agents/*.md`
+- Skills: `.opencode/skills/*`
 - GT runtime snapshot: `gt/`
 - Ignored local docs snapshot: `docs/`
 - Ignored local archive directory: `output/`
@@ -44,7 +44,7 @@ The goal-driven workflow is embedded inside `software-prototyper-orchestrator`.
 
 ## Source And Runtime Split
 
-- Repo-local source: `agents/` and `skills/`
+- Repo-local source: `.opencode/agents/` and `.opencode/skills/`
 - Runtime snapshot: `gt/`
 - Formal runtime output root: `Prototype-output/{project_id}/`
 

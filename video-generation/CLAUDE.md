@@ -6,17 +6,17 @@ This file provides guidance when working with the `video-generation/` module in 
 
 Within this repository, use these paths directly:
 
-- Agents: `agents/*.md`
-- Skills: `skills/*`
+- Agents: `.opencode/agents/*.md`
+- Skills: `.opencode/skills/*`
 - GT runtime snapshot: `gt/`
 - Ignored local docs snapshot: `docs/`
 - Ignored local archive directory: `output/`
 
-Runtime discovery does **not** depend on an in-repo `.opencode/` folder. Agent and skill discovery is provided through user-level symlinks:
+Runtime discovery uses the module-local `.opencode/` tree:
 
-- `~/.config/opencode/agents/video-generation-*.md`
-- `~/.config/opencode/skills/video-*`
-- `~/.config/opencode/skills/video-generation-qa-checklist`
+- `.opencode/agents/video-generation-*.md`
+- `.opencode/skills/video-*`
+- `.opencode/skills/video-generation-qa-checklist`
 
 The ignored repo-local `output/` directory is not the formal runtime contract.
 
@@ -32,11 +32,11 @@ GT configuration under `gt/` maps the three GT roles to those three OpenCode age
 
 ## Running Stage Scripts
 
-Stage source files live in `skills/`, but runtime commands should use the user-level symlink contract:
+Stage source files live in `.opencode/skills/`, and runtime commands should use project-local paths:
 
 ```bash
-PYTHONPATH=~/.config/opencode/skills/video-s2-character-anchor/scripts \
-python ~/.config/opencode/skills/video-s2-character-anchor/scripts/stage2_seedream.py \
+PYTHONPATH=.opencode/skills/video-s2-character-anchor/scripts \
+python .opencode/skills/video-s2-character-anchor/scripts/stage2_seedream.py \
   --project-id test-001 \
   --story Video-Producer-output/test-001/scripts/story.yaml
 ```
@@ -56,6 +56,6 @@ Keep using `Video-Producer-output/{project_id}/` for intermediate assets, final 
 ## Editing Rules
 
 - If you update a stage skill, also update the corresponding GT bead instructions when runtime commands change.
-- Keep all runtime examples pointed at `~/.config/opencode/skills/...`.
+- Keep all runtime examples pointed at `.opencode/skills/...`.
 - Do not reintroduce the retired single-agent entrypoint, hidden in-repo skill paths, or legacy patrol wording into active runtime docs or configs.
 - Use `video-generation-qa-checklist` for reviewer-facing acceptance and phase review guidance.

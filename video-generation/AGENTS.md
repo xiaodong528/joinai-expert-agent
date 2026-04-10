@@ -6,9 +6,9 @@ This file provides guidance when working with the `video-generation/` module in 
 
 This module keeps the video-generation source and runtime snapshot together under one repo-local root:
 
-- `agents/`
+- `.opencode/agents/`
   Source-of-truth agent definitions.
-- `skills/`
+- `.opencode/skills/`
   Stage skills and QA guidance.
 - `gt/`
   Gas Town configuration, runtime state snapshot, and role overrides.
@@ -17,11 +17,11 @@ This module keeps the video-generation source and runtime snapshot together unde
 - `output/`
   Ignored local archive / sample directory inside the repository.
 
-Runtime discovery does **not** depend on an in-repo `.opencode/` folder. Agent and skill discovery is provided through user-level symlinks:
+Runtime discovery uses the module-local `.opencode/` tree:
 
-- `~/.config/opencode/agents/video-generation-*.md`
-- `~/.config/opencode/skills/video-*`
-- `~/.config/opencode/skills/video-generation-qa-checklist`
+- `.opencode/agents/video-generation-*.md`
+- `.opencode/skills/video-*`
+- `.opencode/skills/video-generation-qa-checklist`
 
 Do not confuse the ignored repo-local `output/` directory with the formal runtime output root. The runtime contract remains:
 
@@ -41,11 +41,11 @@ GT configuration under `gt/` maps the three GT roles to those three OpenCode age
 
 ## Running Stage Scripts
 
-Stage source files live in `skills/`, but runtime commands should use the user-level symlink contract:
+Stage source files live in `.opencode/skills/`, and runtime commands should use project-local paths:
 
 ```bash
-PYTHONPATH=~/.config/opencode/skills/video-s2-character-anchor/scripts \
-python ~/.config/opencode/skills/video-s2-character-anchor/scripts/stage2_seedream.py \
+PYTHONPATH=.opencode/skills/video-s2-character-anchor/scripts \
+python .opencode/skills/video-s2-character-anchor/scripts/stage2_seedream.py \
   --project-id test-001 \
   --story Video-Producer-output/test-001/scripts/story.yaml
 ```
@@ -79,6 +79,6 @@ Repo-local `video-generation/output/` is only an ignored archive / sample direct
 ## Editing Rules
 
 - If you update a stage skill, also update the corresponding GT bead instructions when runtime commands change.
-- Keep all runtime examples pointed at `~/.config/opencode/skills/...`.
+- Keep all runtime examples pointed at `.opencode/skills/...`.
 - Do not reintroduce the retired single-agent entrypoint, hidden in-repo skill paths, or legacy patrol wording into active runtime docs or configs.
 - Use `video-generation-qa-checklist` for reviewer-facing acceptance and phase review guidance.
