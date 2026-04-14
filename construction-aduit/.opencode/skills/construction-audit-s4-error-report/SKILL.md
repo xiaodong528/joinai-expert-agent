@@ -8,6 +8,8 @@ description: "工程审核错误报告技能：读取 `findings/*.json` 与 `aud
 **用途（Purpose）:** 错误报告生成（Error report generation）。
 读取阶段4产出的 `findings/*.json` 与 `audit-config.yaml`，聚合审计结果并生成正式交付物 `audit-report.md` 与 `audit-report.docx`。本技能不输出 JSON 报告，不生成修正版表格。
 
+当前正式主链中，本技能由 Mayor 直接加载执行，不再要求经由 Polecat 派发。
+
 ---
 
 ## 输入契约（Input Contract）

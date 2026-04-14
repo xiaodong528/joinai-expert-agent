@@ -172,7 +172,7 @@ def build_config(
     audit_date = now.date().isoformat()
     resolved_output_dir = output_dir.resolve()
     working_path_str = str(spreadsheet_working_path.resolve())
-    target_sheets = all_sheets if sheet_scope == "all" else (visible_sheets or all_sheets)
+    target_sheets = list(visible_sheets)
 
     return {
         "audit_id": audit_id,
@@ -236,7 +236,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--sheet-scope",
         default="visible",
         choices=("visible", "all"),
-        help="Target sheet scope written into audit-config.yaml",
+        help="Target sheet scope written into audit-config.yaml; formal flow only accepts 'visible'",
     )
     parser.add_argument("--project-name", required=True, help="Project name")
     parser.add_argument("--output-dir", required=True, help="Output directory")
@@ -259,6 +259,10 @@ def main(argv: list[str] | None = None) -> int:
         )
         if not all_sheets:
             return friendly_error("Excel 文件中未找到工作表")
+        if args.sheet_scope != "visible":
+            return friendly_error("当前正式主链只支持 sheet_scope=visible；hidden sheet 不能进入 spreadsheet.sheets")
+        if not visible_sheets:
+            return friendly_error("Excel 文件中未找到可直接审查的可见工作表")
 
         output_dir = Path(args.output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)

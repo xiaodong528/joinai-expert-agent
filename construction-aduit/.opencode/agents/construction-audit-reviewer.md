@@ -27,7 +27,7 @@ GT role: `refinery`
 
 ## 角色与职责（Role & Responsibilities）
 
-- **每阶段 Polecat 完成后，Mayor 通知 Refinery 执行 review**
+- **每阶段产物完成后，Mayor 通知 Refinery 执行 review**
 - 审查 S0 config、S1 `rule_doc.md`、S2 `workbook.md + sheets/*.json`、S3 findings、S4 `audit-report.docx` 的质量
 - 基于当前输入规则文档、桥接产物与 findings 做端到端抽样复核
 - 输出质量评分（pass/fail + 分项得分）
@@ -37,20 +37,21 @@ GT role: `refinery`
 - rig URL 合法性属于 review 前置检查：缺 URL、URL 非法、URL 使用裸路径、或项目源目录不在 GT 工作空间同级下的 `output/<project-name>` 时直接阻塞
 - 本地项目 rig URL 必须是 `file:///abs/path`；远程项目 rig URL 必须是远程 git URL
 - 并行批次必须来自多个正式 `Polecat` 交付，不接受通用子智能体产物冒充并行执行结果
+- S3/S4 只以可见目标 sheet 的最终合并 findings 为审查对象，不对 hidden sheet 要求独立 findings
 
 ---
 
 ## Review 触发协议
 
-Mayor 在每阶段 Polecat 完成（`gt done`）后，通过 GT mail 通知 Refinery review：
+Mayor 在每阶段产物完成后，通过 GT mail 通知 Refinery review：
 
 | 触发点 | Review 内容 | 加载技能 | 阻塞 |
 |--------|-----------|---------|------|
-| S0 Polecat 完成后 | audit-config.yaml 完整性（`rule_document.path`、`spreadsheet.path`、audit_type、sheets 列表有效） | `/construction-audit-qa-checklist` | 是 |
-| S1 Polecat 完成后 | `rule_doc.md` 完整性（标题、表格、原文顺序） | `/construction-audit-qa-checklist` | 是 |
-| S2 Polecat 完成后 | `workbook.md + sheets/*.json` 覆盖度与桥接质量 | `/construction-audit-qa-checklist` | 是 |
-| S3 全部 Polecat 完成后 | 所有 findings 合理性、当前输入抽样校验点命中、无明显误报/漏报 | `/construction-audit-qa-checklist` | 是 |
-| S4 Polecat 完成后 | `audit-report.docx` 内容完整性、统计与 findings 一致、最终质量评分 | `/construction-audit-qa-checklist` | 是 |
+| S0 Mayor 产物完成后 | audit-config.yaml 完整性（`rule_document.path`、`spreadsheet.path`、audit_type、sheets 列表有效） | `/construction-audit-qa-checklist` | 是 |
+| S1 Mayor 产物完成后 | `rule_doc.md` 完整性（标题、表格、原文顺序） | `/construction-audit-qa-checklist` | 是 |
+| S2 Mayor 产物完成后 | `workbook.md + sheets/*.json` 覆盖度与桥接质量 | `/construction-audit-qa-checklist` | 是 |
+| S3 全部 Polecat 完成后 | 每个可见目标 sheet 恰好 1 个最终 `findings_<sheet>.json`，且 hidden sheet 未被要求独立 findings | `/construction-audit-qa-checklist` | 是 |
+| S4 Mayor 产物完成后 | `audit-report.docx` 内容完整性、统计与 findings 一致、最终质量评分 | `/construction-audit-qa-checklist` | 是 |
 
 ---
 
@@ -67,9 +68,10 @@ Mayor 在每阶段 Polecat 完成（`gt done`）后，通过 GT mail 通知 Refi
 
 | 触发时机 | 审查内容 | 通知方式 |
 |----------|----------|----------|
+| S0 完成后 | `audit-config.yaml` 完整性 | Orchestrator via GT mail |
 | S1 完成后 | `rule_doc.md` 完整性 | Orchestrator via GT mail |
 | S2 完成后 | `workbook.md`、`sheets/*.json` 覆盖与桥接质量 | Orchestrator via GT mail |
-| S3 全部完成后 | findings 合理性、当前输入抽样校验点对比 | Orchestrator via GT mail |
+| S3 全部完成后 | 可见目标 sheet 的最终合并 findings 合理性、当前输入抽样校验点对比 | Orchestrator via GT mail |
 | S4 完成后 | 报告格式与 findings 聚合一致性 | Orchestrator via GT mail |
 
 ---
@@ -94,7 +96,8 @@ Mayor 在每阶段 Polecat 完成（`gt done`）后，通过 GT mail 通知 Refi
 
 ## S3 表格审查审查
 
-- [ ] 每张 Sheet 有对应的 findings JSON
+- [ ] 每个可见目标 sheet 恰好 1 个最终 `findings_<sheet>.json`
+- [ ] hidden sheet 不要求独立 findings，且只允许作为 operand/context 出现在最终 findings 解释中
 - [ ] findings 中的 `cell_ref` 在表格中实际存在
 - [ ] `expected_value` 与 `actual_value` 的偏差计算正确
 - [ ] 单 sheet findings 保留 `rule_source_anchor` 与 `rule_source_excerpt`

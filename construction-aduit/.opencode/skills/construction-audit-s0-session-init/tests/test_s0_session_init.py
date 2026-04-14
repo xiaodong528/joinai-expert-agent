@@ -229,24 +229,21 @@ workbook.save(r"{path}")
             self.assertEqual(config["spreadsheet"]["sheets"], ["工程信息", "表一"])
             self.assertEqual(config["spreadsheet"]["sheet_scope"], "visible")
 
-    def test_supports_sheet_scope_all_for_regression_runs(self):
+    def test_rejects_sheet_scope_all_to_keep_hidden_sheets_out_of_direct_targets(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
             rule_path = tmpdir_path / "rule_document.docx"
             spreadsheet_path = tmpdir_path / "spreadsheet.xlsx"
             output_dir = tmpdir_path / "audit-output"
-            config_path = output_dir / "audit-config.yaml"
 
             self._make_rule_document(rule_path)
             self._make_xlsx_with_hidden_sheet(spreadsheet_path)
 
             result = self._run(rule_path, spreadsheet_path, output_dir, sheet_scope="all")
 
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn("target_sheets_count=3", result.stdout)
-            config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-            self.assertEqual(config["spreadsheet"]["sheet_scope"], "all")
-            self.assertEqual(config["spreadsheet"]["sheets"], ["工程信息", "隐藏费率表", "表一"])
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("sheet_scope=visible", result.stderr)
+            self.assertFalse((output_dir / "audit-config.yaml").exists())
 
     def test_supports_literal_tmp_output_dir(self):
         with tempfile.TemporaryDirectory() as tmpdir:

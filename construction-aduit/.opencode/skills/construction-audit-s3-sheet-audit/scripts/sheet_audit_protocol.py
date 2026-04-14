@@ -48,6 +48,103 @@ SOURCE_SPECS = {
 }
 
 
+def split_rule_rows_into_fixed_batches(
+    rule_rows: list[dict[str, Any]],
+    batch_count: int = 3,
+) -> list[list[dict[str, Any]]]:
+    if batch_count <= 0:
+        raise ValueError("batch_count 必须大于 0")
+
+    total_rows = len(rule_rows)
+    base_size, remainder = divmod(total_rows, batch_count)
+    batches: list[list[dict[str, Any]]] = []
+    start_index = 0
+
+    for batch_offset in range(batch_count):
+        current_size = base_size + (1 if batch_offset < remainder else 0)
+        end_index = start_index + current_size
+        batches.append([dict(row) for row in rule_rows[start_index:end_index]])
+        start_index = end_index
+
+    return batches
+
+
+def merge_partial_findings(
+    sheet_name: str,
+    partial_results: list[dict[str, Any]],
+    expected_batch_count: int = 3,
+) -> dict[str, Any]:
+    if expected_batch_count <= 0:
+        raise ValueError("expected_batch_count 必须大于 0")
+    if not partial_results:
+        raise ValueError("partial_results 不能为空")
+
+    ordered_results = sorted(
+        partial_results,
+        key=lambda item: int(item.get("batch_index", 0)),
+    )
+    batch_indexes = [int(item.get("batch_index", 0)) for item in ordered_results]
+    if batch_indexes != list(range(1, expected_batch_count + 1)):
+        raise ValueError("partial_results 缺少完整且连续的 batch_index")
+
+    audit_ids = {
+        str(item.get("audit_id", "")).strip()
+        for item in ordered_results
+        if str(item.get("audit_id", "")).strip()
+    }
+    if len(audit_ids) != 1:
+        raise ValueError("partial_results 的 audit_id 必须唯一")
+
+    severity_totals = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+    total_cells_checked = 0
+    total_pass = 0
+    merged_findings: list[dict[str, Any]] = []
+    cumulative_deviation_values: list[float] = []
+    deviation_warning = False
+
+    for result in ordered_results:
+        current_sheet_name = str(result.get("sheet_name", "")).strip()
+        if current_sheet_name != sheet_name:
+            raise ValueError("partial_results 中存在不属于当前 sheet 的结果")
+
+        total_cells_checked += int(result.get("total_cells_checked", 0) or 0)
+        merged_findings.extend([dict(finding) for finding in result.get("findings", [])])
+
+        summary = result.get("summary", {})
+        if isinstance(summary, dict):
+            for severity in severity_totals:
+                severity_totals[severity] += int(summary.get(severity, 0) or 0)
+            total_pass += int(summary.get("pass", 0) or 0)
+            cumulative_deviation_values.append(
+                float(summary.get("cumulative_deviation_pct", 0.0) or 0.0)
+            )
+            deviation_warning = deviation_warning or bool(
+                summary.get("cumulative_deviation_warning", False)
+            )
+
+    average_cumulative_deviation = (
+        sum(cumulative_deviation_values) / len(cumulative_deviation_values)
+        if cumulative_deviation_values
+        else 0.0
+    )
+    deviation_warning = deviation_warning or average_cumulative_deviation > 5.0
+
+    return {
+        "sheet_name": sheet_name,
+        "audit_id": audit_ids.pop(),
+        "total_cells_checked": total_cells_checked,
+        "findings": merged_findings,
+        "summary": {
+            **severity_totals,
+            "pass": total_pass,
+            "cumulative_deviation_pct": round(average_cumulative_deviation, 4),
+            "cumulative_deviation_warning": deviation_warning,
+            "completed_batches": len(ordered_results),
+            "batch_count": expected_batch_count,
+        },
+    }
+
+
 def parse_pipe_row(line: str) -> list[str]:
     stripped = line.strip()
     if not stripped.startswith("|"):

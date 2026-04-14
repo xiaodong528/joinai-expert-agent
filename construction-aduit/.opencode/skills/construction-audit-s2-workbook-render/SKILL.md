@@ -8,6 +8,8 @@ description: "工程审核工作簿渲染技能：读取 `audit-config.yaml` 中
 **用途（Purpose）:** 工作簿渲染（Workbook rendering）。
 读取 `audit-config.yaml` 与工作簿文件，导出后续规则抽取阶段使用的 `workbook.md` 与 `sheets/*.json`。本技能只负责结构化表达与桥接视图，不负责规则抽取、rule candidate 标记、sheet 审核或 findings 输出。
 
+当前正式主链中，本技能由 Mayor 直接加载执行，不再要求经由 Polecat 派发。
+
 ---
 
 ## 输入契约（Input Contract）

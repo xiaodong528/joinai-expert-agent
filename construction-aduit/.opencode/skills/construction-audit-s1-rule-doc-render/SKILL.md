@@ -8,6 +8,8 @@ description: "工程审核规则文档渲染技能：读取 `audit-config.yaml` 
 **用途（Purpose）:** 规则文档渲染（Rule document rendering）。
 读取 `audit-config.yaml` 与 `rule_document.docx`，生成后续规则抽取阶段使用的 `rule_doc.md`。本技能只负责文档渲染与最小输出校验，不负责规则抽取、sheet 导出、定位或 review。
 
+当前正式主链中，本技能由 Mayor 直接加载执行，不再要求经由 Polecat 派发。
+
 ---
 
 ## 输入契约（Input Contract）

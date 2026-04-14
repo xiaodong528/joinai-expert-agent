@@ -1,12 +1,17 @@
 ---
 name: construction-audit-s3-sheet-audit
-description: "工程审核按表审计技能：每个智能体只审核一个 sheet，直接阅读 `audit-config.yaml`、`rule_doc.md`、`workbook.md` 与目标 `sheets/*.json`，自行识别费用名称和依据计算方法；运行时只调用 `calc_formula.py` 做单元格数值计算，并由智能体自行写出 `findings_sheet-name.json`。Triggers on sheet audit, single-sheet worker audit, findings generation。"
+description: "工程审核按表审计技能：供 Mayor 在 S3 以双层并行方式调用。每个可见目标 sheet 固定拆成 3 个 `mode=shard_audit` 分片 Polecat，再由 1 个 `mode=merge_sheet_findings` Polecat 合并成最终 `findings_<sheet>.json`；hidden sheet 只保留为跨表计算上下文。Triggers on sheet audit, shard audit, findings merge, visible-sheet review。"
 ---
 
 # Skill: construction-audit-s3-sheet-audit
 
 **用途（Purpose）:** 按表审计（Sheet audit）。
-每个智能体只审核一个目标 sheet。智能体直接阅读 `audit-config.yaml`、阶段2的 `rule_doc.md`、阶段3的 `workbook.md` 与目标 `sheets/<sheet>.json`，先按规则表行枚举费用名称，再按业务行锚点与金额角色列展开目标格，最后调用 `calc_formula.py` 做单元格数值计算，并自行写出 `findings/findings_<sheet>.json`。本技能不提供总控脚本，不单列输出 `rules.json`，不生成报告。
+本技能是当前正式主链中唯一保留给 Polecat 派发执行的阶段技能，供 Mayor 在 S3 双层并行链路中复用，不新增阶段 skill。运行模式固定为两类：
+
+- `mode=shard_audit`：每个 Polecat 只审核当前可见目标 sheet 的一个固定分片
+- `mode=merge_sheet_findings`：每个 Polecat 只负责把同一可见目标 sheet 的 3 份分片 findings 合并成最终 `findings_<sheet>.json`
+
+直接审查目标只能来自 `audit-config.yaml.spreadsheet.sheets`。`hidden_sheets` 只能保留在 `sheets/*.json` 中供 `calc_formula.py --context-sheets-dir` 做跨表取数，不得把 hidden sheet 当作 `sheet_name` 直接审，也不得为 hidden sheet 生成独立 findings。
 
 ---
 
@@ -14,8 +19,15 @@ description: "工程审核按表审计技能：每个智能体只审核一个 sh
 
 | 输入 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| `audit_config_path` | file path (`.yaml` / `.json`) | 是 | 包含 `audit_id`、`audit_type`、`rule_document.markdown_path`、`spreadsheet.sheets`、`output_dir` 的配置文件 |
-| `sheet_name` | string | 是 | 当前 worker 负责审核的目标 sheet 名称 |
+| `audit_config_path` | file path (`.yaml` / `.json`) | 是 | 包含 `audit_id`、`audit_type`、`rule_document.markdown_path`、`spreadsheet.sheets`、`spreadsheet.hidden_sheets`、`output_dir` 的配置文件 |
+| `mode` | string | 是 | `shard_audit` 或 `merge_sheet_findings` |
+| `sheet_name` | string | 是 | 当前 worker 负责处理的可见目标 sheet 名称 |
+| `batch_index` | integer | `mode=shard_audit` 时必填 | 当前分片序号，固定取值 `1..3` |
+| `batch_count=3` | integer | `mode=shard_audit` / `mode=merge_sheet_findings` 时必填 | 固定 fanout，必须为 3 |
+| `assigned_rule_rows` | list / description | `mode=shard_audit` 时必填 | 当前分片负责的规则行；必须按原始顺序平均切成 3 段 |
+| `partial_output_path` | file path (`.json`) | `mode=shard_audit` 时必填 | 分片 findings 输出路径 |
+| `partial_findings_paths` | list[file path] | `mode=merge_sheet_findings` 时必填 | 3 个分片 findings 路径 |
+| `merged_output_path` | file path (`.json`) | `mode=merge_sheet_findings` 时必填 | 最终 findings 输出路径 |
 
 从配置文件与阶段产物中解析的关键输入：
 
@@ -24,14 +36,17 @@ description: "工程审核按表审计技能：每个智能体只审核一个 sh
 - `rule_document.markdown_path` -> `rule_doc.md`
 - `{output_dir}/workbook.md`
 - `{output_dir}/sheets/*.json`
+- `spreadsheet.sheets`（唯一直接审查目标集合）
+- `spreadsheet.hidden_sheets`（只读上下文集合）
 
 ---
 
 ## 输出契约（Output Contract）
 
-正式产物固定为：
+正式产物分两类：
 
-- `{output_dir}/findings/findings_<sheet_name>.json`
+- `mode=shard_audit`：`{output_dir}/findings/parts/<sheet>/findings_<sheet>__part_{1..3}.json`
+- `mode=merge_sheet_findings`：`{output_dir}/findings/findings_<sheet_name>.json`
 
 每个 findings 文件至少包含：
 
@@ -56,6 +71,7 @@ description: "工程审核按表审计技能：每个智能体只审核一个 sh
 本技能不提供统一总控 CLI 摘要；每个 worker 完成后应由智能体自行汇报：
 
 - `audit_id`
+- `mode`
 - `sheet_name`
 - `output_findings`
 - `findings_count`
@@ -64,15 +80,20 @@ description: "工程审核按表审计技能：每个智能体只审核一个 sh
 
 ## 执行步骤（Execution Steps）
 
-1. 读取并校验 `audit-config.yaml` 与当前 `sheet_name`
-2. 阅读 `rule_doc.md`、`workbook.md` 中对应 sheet 的桥接信息，以及目标 `sheets/<sheet>.json`
-3. 先从 `rule_doc.md` 中抽取当前 sheet 的规则表行，并按原文顺序枚举费用名称
-4. 以费用名称列做行锚点，再按 `amount_role` 展开目标金额格；不得只抽查个别规则或只检查单列金额
-5. 将规则行分为 `source_backed`、`not_applicable`、`derived_summary`
-6. 对 `J/K` 一类支撑格只做校验支撑；正式 findings 仅从协议标记为 `report_as_finding=true` 的目标格产出
-7. 仅对需要确定性数值复核的目标格调用 `calc_formula.py`
-8. 智能体自行比较期望值与实际值，生成 `finding` 结构
-9. 智能体自行写出单个 `findings_<sheet>.json`
+1. 读取并校验 `audit-config.yaml`、`mode` 与当前 `sheet_name`
+2. 确认 `sheet_name` 来自 `spreadsheet.sheets`，不得把 hidden sheet 当作 `sheet_name` 直接审
+3. `mode=shard_audit` 时：
+   - 阅读 `rule_doc.md`、`workbook.md` 与 `sheets/<sheet>.json`
+   - 从 `rule_doc.md` 中抽取当前 sheet 的规则表行
+   - 按原始顺序将规则行平均切成固定 3 段，并且当前 worker 只处理 `assigned_rule_rows`
+   - 以费用名称列做行锚点，再按 `amount_role` 展开目标金额格
+   - 仅对当前分片需要确定性数值复核的目标格调用 `calc_formula.py`
+   - 写出当前分片的 `partial_output_path`
+4. `mode=merge_sheet_findings` 时：
+   - 读取当前 `sheet_name` 的 3 份 `partial_findings_paths`
+   - 校验 `batch_count=3`、`batch_index` 连续且无缺失
+   - 合并为单个最终 `merged_output_path`
+5. 无论哪种模式，都不得生成 `rules.json`、报告文件或 hidden sheet 的独立 findings
 
 ---
 
@@ -93,12 +114,18 @@ python .opencode/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.p
 - [ ] `rule_doc.md` 已生成且非空
 - [ ] `workbook.md` 已生成且非空
 - [ ] `sheets/*.json` 覆盖 `spreadsheet.sheets`
-- [ ] 智能体显式只处理一个 `sheet_name`
+- [ ] 智能体显式只处理一个来自 `spreadsheet.sheets` 的 `sheet_name`
+- [ ] hidden sheet 只能作为上下文，不得把 hidden sheet 当作 `sheet_name` 直接审
+- [ ] `mode=shard_audit` 与 `mode=merge_sheet_findings` 至少命中其一
+- [ ] `mode=shard_audit` 时显式传入 `batch_index`、`batch_count=3`、`assigned_rule_rows`、`partial_output_path`
+- [ ] `mode=merge_sheet_findings` 时显式传入 `batch_count=3`、`partial_findings_paths`、`merged_output_path`
 - [ ] 当前 `sheet_name` 对应的 `sheets/<sheet>.json` 存在
-- [ ] 当前 `sheet_name` 的规则表行已被完整枚举
+- [ ] 当前 `sheet_name` 的规则表行能被稳定平均切成固定 3 段，且 3 个分片无重复、无遗漏
 - [ ] 当前 `sheet_name` 的目标格按 `amount_role` 展开，而不是只审单个金额列
 - [ ] `calc_formula.py` 能返回 `actual_value`、`expected_value`、`discrepancy`
-- [ ] 智能体写出的 `findings_<sheet>.json` 中保留 `rule_source_anchor` 与 `rule_source_excerpt`
+- [ ] 分片产物路径固定为 `findings/parts/<sheet>/findings_<sheet>__part_{1..3}.json`
+- [ ] 最终产物路径固定为 `findings/findings_<sheet>.json`
+- [ ] 智能体写出的最终 `findings_<sheet>.json` 中保留 `rule_source_anchor` 与 `rule_source_excerpt`
 - [ ] `output_dir` 中不存在正式 `rules.json`
 
 ---
@@ -109,9 +136,12 @@ python .opencode/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.p
 - 缺少 `rule_document.markdown_path`
 - 缺少 `workbook.md`
 - 缺少当前目标 sheet 的 JSON
+- `sheet_name` 不在 `spreadsheet.sheets` 中，或 `sheet_name` 命中 hidden sheet
+- `batch_count` 不等于 3
+- 当前分片或最终合并缺少要求的输入字段
 - 智能体无法从桥接产物中判断当前 sheet 的规则
 - `calc_formula.py` 计算失败
-- 当前 worker 无法生成 `findings_<sheet>.json`
+- 当前 worker 无法生成分片 findings 或最终 `findings_<sheet>.json`
 
 ---
 
@@ -131,6 +161,6 @@ python .opencode/skills/construction-audit-s3-sheet-audit/scripts/calc_formula.p
 
 - 当前 `v0.1.0` 正式设计以 `docs/v0.1.0/construction-audit-agent-design.md` 为准。
 - 本技能对应收敛后的 `v0.1.0` 阶段4（命名为 `construction-audit-s3-sheet-audit`）。
-- 正式设计是“每个 sheet 一个智能体 worker”，并行派发由 GT / Mayor 负责，不在本技能内部实现。
+- 正式设计是“双层并行”：先按可见目标 sheet 并行，再对每个可见目标 sheet 固定拆成 3 个分片 worker，并由第 4 个 worker 合并。
 - 除 `calc_formula.py` 外，规则阅读、定位、findings 组装和写盘都由智能体完成。
-- 推荐结合 `scripts/sheet_audit_protocol.py` 与 `references/row-driven-audit-protocol.md` 使用，优先遵循“规则行驱动 + 行锚点 + 目标格展开”的确定性协议。
+- 推荐结合 `scripts/sheet_audit_protocol.py` 与 `references/row-driven-audit-protocol.md` 使用，优先遵循“规则行驱动 + 行锚点 + 固定三段分片 + 最终合并”的确定性协议。

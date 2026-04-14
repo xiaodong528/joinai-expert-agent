@@ -19,7 +19,12 @@ S3_SCRIPTS = AUDIT_ROOT / ".opencode/skills/construction-audit-s3-sheet-audit/sc
 if str(S3_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(S3_SCRIPTS))
 
-from sheet_audit_protocol import build_sheet_audit_plan, extract_sheet_rule_rows
+from sheet_audit_protocol import (
+    build_sheet_audit_plan,
+    extract_sheet_rule_rows,
+    merge_partial_findings,
+    split_rule_rows_into_fixed_batches,
+)
 
 
 class SheetAuditProtocolTests(unittest.TestCase):
@@ -119,3 +124,125 @@ class SheetAuditProtocolTests(unittest.TestCase):
             self.assertEqual(expected_modes["L13"], "same_row_sum")
             self.assertEqual(expected_modes["L14"], "same_row_sum")
             self.assertTrue(all(item["report_rounding"] == 2 for item in reportable_checks))
+
+    def test_splits_rule_rows_into_three_contiguous_balanced_batches(self):
+        rule_rows = [
+            {"fee_name": f"费用{i}", "source_row_index": i}
+            for i in range(1, 10)
+        ]
+
+        batches = split_rule_rows_into_fixed_batches(rule_rows, batch_count=3)
+
+        self.assertEqual(len(batches), 3)
+        self.assertEqual([len(batch) for batch in batches], [3, 3, 3])
+        self.assertEqual(
+            [[row["source_row_index"] for row in batch] for batch in batches],
+            [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+        )
+
+    def test_splits_small_rule_sets_without_overlap_or_gaps(self):
+        rule_rows = [
+            {"fee_name": "建筑安装工程费", "source_row_index": 1},
+            {"fee_name": "需要安装的设备费", "source_row_index": 2},
+        ]
+
+        batches = split_rule_rows_into_fixed_batches(rule_rows, batch_count=3)
+
+        self.assertEqual(len(batches), 3)
+        self.assertEqual([len(batch) for batch in batches], [1, 1, 0])
+        flattened = [row["source_row_index"] for batch in batches for row in batch]
+        self.assertEqual(flattened, [1, 2])
+
+    def test_merges_partial_findings_into_single_sheet_payload_for_s4(self):
+        partial_results = [
+            {
+                "batch_index": 1,
+                "batch_count": 3,
+                "sheet_name": "表一（451定额折前）",
+                "audit_id": "AUDIT-S3-MERGE-001",
+                "total_cells_checked": 3,
+                "findings": [
+                    {
+                        "finding_id": "F-001",
+                        "cell_ref": "L7",
+                        "severity": "critical",
+                        "expected_value": 120,
+                        "actual_value": 100,
+                        "discrepancy_pct": 20.0,
+                        "rule_source_anchor": "表一（451定额折前）审核规则/建筑安装工程费",
+                        "rule_source_excerpt": "合计 = 除税价 + 税额",
+                    }
+                ],
+                "summary": {
+                    "critical": 1,
+                    "high": 0,
+                    "medium": 0,
+                    "low": 0,
+                    "pass": 2,
+                    "cumulative_deviation_pct": 20.0,
+                    "cumulative_deviation_warning": True,
+                },
+            },
+            {
+                "batch_index": 2,
+                "batch_count": 3,
+                "sheet_name": "表一（451定额折前）",
+                "audit_id": "AUDIT-S3-MERGE-001",
+                "total_cells_checked": 2,
+                "findings": [],
+                "summary": {
+                    "critical": 0,
+                    "high": 0,
+                    "medium": 0,
+                    "low": 0,
+                    "pass": 2,
+                    "cumulative_deviation_pct": 0.0,
+                    "cumulative_deviation_warning": False,
+                },
+            },
+            {
+                "batch_index": 3,
+                "batch_count": 3,
+                "sheet_name": "表一（451定额折前）",
+                "audit_id": "AUDIT-S3-MERGE-001",
+                "total_cells_checked": 1,
+                "findings": [
+                    {
+                        "finding_id": "F-002",
+                        "cell_ref": "L12",
+                        "severity": "medium",
+                        "expected_value": 220,
+                        "actual_value": 200,
+                        "discrepancy_pct": 10.0,
+                        "rule_source_anchor": "表一（451定额折前）审核规则/合计",
+                        "rule_source_excerpt": "合计 = 建筑安装工程费 + 需要安装的设备费 + 工程建设其他费",
+                    }
+                ],
+                "summary": {
+                    "critical": 0,
+                    "high": 0,
+                    "medium": 1,
+                    "low": 0,
+                    "pass": 0,
+                    "cumulative_deviation_pct": 10.0,
+                    "cumulative_deviation_warning": True,
+                },
+            },
+        ]
+
+        merged = merge_partial_findings(
+            "表一（451定额折前）",
+            partial_results,
+            expected_batch_count=3,
+        )
+
+        self.assertEqual(merged["sheet_name"], "表一（451定额折前）")
+        self.assertEqual(merged["audit_id"], "AUDIT-S3-MERGE-001")
+        self.assertEqual(merged["total_cells_checked"], 6)
+        self.assertEqual([item["finding_id"] for item in merged["findings"]], ["F-001", "F-002"])
+        self.assertEqual(merged["summary"]["critical"], 1)
+        self.assertEqual(merged["summary"]["medium"], 1)
+        self.assertEqual(merged["summary"]["pass"], 4)
+        self.assertEqual(merged["summary"]["completed_batches"], 3)
+        self.assertEqual(merged["summary"]["batch_count"], 3)
+        self.assertTrue(merged["summary"]["cumulative_deviation_warning"])

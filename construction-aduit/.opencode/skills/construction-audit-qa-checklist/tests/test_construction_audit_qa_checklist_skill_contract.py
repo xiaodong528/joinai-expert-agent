@@ -41,6 +41,16 @@ class ConstructionAuditQaChecklistSkillContractTests(unittest.TestCase):
         self.assertIn("oracle_correct_spreadsheet_path", content)
         self.assertIn("oracle_wrong_spreadsheet_path", content)
 
+    def test_qa_contract_uses_visible_target_sheets_and_ignores_hidden_sheet_findings(self):
+        self.assertTrue(SKILL_PATH.exists(), f"missing skill file: {SKILL_PATH}")
+        content = SKILL_PATH.read_text(encoding="utf-8")
+
+        self.assertIn("`spreadsheet.sheets`", content)
+        self.assertIn("`spreadsheet.hidden_sheets`", content)
+        self.assertIn("hidden sheet 仅允许作为 operand/context 出现", content)
+        self.assertIn("不得因 hidden sheet 没有 findings 而判失败", content)
+        self.assertIn("每个可见目标 sheet 恰好存在 1 个最终 findings 文件", content)
+
     def test_input_output_contracts_do_not_depend_on_retired_outputs(self):
         self.assertTrue(SKILL_PATH.exists(), f"missing skill file: {SKILL_PATH}")
         content = SKILL_PATH.read_text(encoding="utf-8")
