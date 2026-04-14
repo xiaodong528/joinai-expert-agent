@@ -5,11 +5,25 @@
 ### Core Operations
 ```bash
 gt rig list                       # List all rigs in workspace
-gt rig add <path>                 # Add new rig
+gt rig add <rig> --adopt --force  # Default: register/adopt a local rig into GT
+gt rig add <rig> <git-url> --local-repo <path> --prefix <prefix>  # Optional: register a remote-bound rig
+gt rig add <rig> file:///abs/path --prefix <prefix>  # Local source repo must use file:// URL
 gt rig remove <rig>               # Remove from registry (no file deletion)
 gt rig reset <rig>                # Reset state (handoff, mail, stale issues)
 gt rig status <rig>               # Detailed rig status
 ```
+
+### Rig Creation Modes
+```bash
+gt init                           # Initialize current directory as rig
+gt rig add <rig> --adopt --force  # Default local-first path; does not require GitHub first
+gt rig add <rig> <git-url> --local-repo <path> --prefix <prefix>  # Use only when binding rig to an existing remote repo
+gt rig add <rig> file:///abs/path --prefix <prefix>  # Use when the source repo is local
+```
+
+- If the source repo is local, `<git-url>` must be `file:///abs/path`, not `/abs/path`.
+- `--local-repo <path>` only enables local object reuse; it does not make a bare path a valid `<git-url>`.
+- If `gt rig add` reports `invalid git URL "/abs/path"`, rewrite it as `file:///abs/path`.
 
 ### Lifecycle
 ```bash

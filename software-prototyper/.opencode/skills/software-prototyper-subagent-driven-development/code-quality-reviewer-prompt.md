@@ -1,27 +1,13 @@
-# Code Quality Reviewer Prompt Template
+# Refinery Quality Review Note
 
-Use this template when dispatching a code quality reviewer subagent.
+此文件保留给旧引用兼容。
 
-**Purpose:** Verify implementation is well-built (clean, tested, maintainable)
+在 `software-prototyper` 中，不再使用“通用代码质量审查子任务”语义。
+如需代码质量复核，应由 `Refinery` 在 GT 主链内完成，并结合：
 
-**Only dispatch after spec compliance review passes.**
+- bead 范围
+- 冻结规格
+- 模块 / 集成测试证据
+- 独立运行验收结果
 
-```
-Review dispatch:
-  Use the project-local template at software-prototyper-requesting-code-review/code-reviewer.md
-
-  WHAT_WAS_IMPLEMENTED: [from implementer's report]
-  PLAN_OR_REQUIREMENTS: Task N from [plan-file]
-  BASE_SHA / HEAD_SHA: [commit range if available]
-  WORKSPACE_PATHS: [paths when reviewing uncommitted or untracked work]
-  WORKSPACE_STATUS: [git status --short or equivalent summary]
-  DESCRIPTION: [task summary]
-```
-
-**In addition to standard code quality concerns, the reviewer should check:**
-- Does each file have one clear responsibility with a well-defined interface?
-- Are units decomposed so they can be understood and tested independently?
-- Is the implementation following the file structure from the plan?
-- Did this implementation create new files that are already large, or significantly grow existing files? (Don't flag pre-existing file sizes — focus on what this change contributed.)
-
-**Code reviewer returns:** Strengths, Issues (Critical/Important/Minor), Assessment
+输出应是可供 `Mayor` 继续调度的结论，而不是通用外部审查摘要。

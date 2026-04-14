@@ -24,6 +24,14 @@ The construction-audit mainline is now a three-role system:
 
 Gas Town default witness patrol may still be enabled at the platform level, but it is not a construction-audit custom role and is not registered through the construction-audit GT config.
 
+## 2.1 Rig URL Rules
+
+- Mayor must create or confirm a new rig before entering S0-S4 for a new project or new review session.
+- The project source directory must be `output/<project-name>` next to `gt/`, not another sibling and not a child inside `gt/`.
+- Local project sources must register rig URLs as `file:///abs/path`.
+- Remote project sources must register rig URLs as remote git URLs.
+- S3 parallel execution always means GT-managed `Polecat` sessions, one sheet per `Polecat`.
+
 ## 3. Active Skill Chain
 
 The active skill set is:

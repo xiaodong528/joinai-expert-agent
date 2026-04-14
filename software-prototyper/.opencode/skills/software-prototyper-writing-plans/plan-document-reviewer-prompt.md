@@ -1,49 +1,11 @@
-# Plan Document Reviewer Prompt Template
+# GT Plan Review Note
 
-Use this template when dispatching a plan document reviewer subagent.
+此文件保留给旧引用兼容。
 
-**Purpose:** Verify the plan is complete, matches the spec, and has proper task decomposition.
+在 `software-prototyper` 中，计划复核应按 GT 三角色语义理解：
 
-**Dispatch after:** The complete plan is written.
+- `Mayor` 负责确认计划能否拆成 Wave 与 bead
+- `Polecat` 负责确认 bead 是否具备可执行输入、验证命令和输出路径
+- `Refinery` 负责确认每个 bead 是否有明确验收点与终裁输入
 
-```
-Task tool (general-purpose):
-  description: "Review plan document"
-  prompt: |
-    You are a plan document reviewer. Verify this plan is complete and ready for implementation.
-
-    **Plan to review:** [PLAN_FILE_PATH]
-    **Spec for reference:** [SPEC_FILE_PATH]
-
-    ## What to Check
-
-    | Category | What to Look For |
-    |----------|------------------|
-    | Completeness | TODOs, placeholders, incomplete tasks, missing steps |
-    | Spec Alignment | Plan covers spec requirements, no major scope creep |
-    | Task Decomposition | Tasks have clear boundaries, steps are actionable |
-    | Buildability | Could an engineer follow this plan without getting stuck? |
-
-    ## Calibration
-
-    **Only flag issues that would cause real problems during implementation.**
-    An implementer building the wrong thing or getting stuck is an issue.
-    Minor wording, stylistic preferences, and "nice to have" suggestions are not.
-
-    Approve unless there are serious gaps — missing requirements from the spec,
-    contradictory steps, placeholder content, or tasks so vague they can't be acted on.
-
-    ## Output Format
-
-    ## Plan Review
-
-    **Status:** Approved | Issues Found
-
-    **Issues (if any):**
-    - [Task X, Step Y]: [specific issue] - [why it matters for implementation]
-
-    **Recommendations (advisory, do not block approval):**
-    - [suggestions for improvement]
-```
-
-**Reviewer returns:** Status, Issues (if any), Recommendations
+不要再把这里解释成通用任务分发模板或计划文档外部审查模板。

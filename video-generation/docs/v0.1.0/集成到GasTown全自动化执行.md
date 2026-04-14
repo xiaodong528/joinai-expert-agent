@@ -57,6 +57,14 @@ Polecat  -> opencode --agent video-generation-worker
 Refinery -> opencode --agent video-generation-reviewer
 ```
 
+新项目或新会话的 rig 前置规则：
+
+- Mayor 必须先创建或确认 rig，再进入任何 Stage 0-10。
+- 项目源目录必须固定为与 `gt/` 同级的 `output/<project-name>`，不能放进 `gt/` 子树，也不能使用其他同级目录。
+- 本地项目必须把 rig URL 规范化为 `file:///abs/path`。
+- 远程项目必须使用远程 git URL。
+- 标准创建链路是 `gt rig add <rig> <url>` → `gt rig start <rig>` → `gt polecat list <rig>`。
+
 阶段脚本运行不再引用仓库内隐藏 Skill 目录，统一使用：
 
 ```bash
@@ -75,6 +83,8 @@ python .opencode/skills/video-s3-keyframe-gen/scripts/stage3_keyframe_chain.py \
 | Wave 2 | worker + reviewer | 关键帧生成与连续性抽查 |
 | Wave 3 | worker + reviewer | 视频、TTS、BGM 并行生成 |
 | Stage 7-10 | worker + reviewer + orchestrator | 拼接、对口型、字幕、技术 QA、最终验收 |
+
+这里的“并行”统一指 GT `Polecat` 会话并行，不指通用子智能体。
 
 Reviewer 统一使用 `video-generation-qa-checklist` 做阶段审查和最终验收。
 

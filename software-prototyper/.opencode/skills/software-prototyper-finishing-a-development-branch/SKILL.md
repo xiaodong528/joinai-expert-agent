@@ -9,6 +9,8 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 Guide completion of development work by presenting clear options and handling chosen workflow.
 
+在 `software-prototyper` 主链里，这是条件型收尾 skill，只能发生在验收放行之后；若 `Mayor` / `Refinery` 尚未明确允许进入收尾节点，不得提前触发。
+
 **Core principle:** Verify tests → Present options → Execute choice → Clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
