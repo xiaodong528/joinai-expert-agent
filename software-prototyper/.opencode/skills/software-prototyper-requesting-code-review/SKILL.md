@@ -7,11 +7,14 @@ description: Use when completing tasks, implementing major features, or before m
 
 Dispatch a reviewer using the project-local `code-reviewer.md` template to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
 
+在 `software-prototyper` 主链里，这个 skill 由 `Polecat` 在当前 bead 达到“可审查结果”时触发，用于把问题尽早暴露在正式交付前。
+
 **Core principle:** Review early, review often.
 
 ## When to Request Review
 
 **Mandatory:**
+- 当前 bead 达到“可审查结果”时触发
 - After each task in subagent-driven development
 - After completing major feature
 - Before merge to main

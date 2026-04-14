@@ -13,6 +13,14 @@ This file provides guidance when working with the `software-prototyper/` module 
 Master control plane: Mayor + Refinery
 Parallel execution plane: multiple Polecat sessions
 
+Rig preparation follows one active rule:
+
+- On every new project, Mayor creates or confirms the project source directory first.
+- The project source directory must be `output/<project-name>` next to `gt/`, not another sibling and not a child inside `gt/`.
+- Local projects must register rig URLs as `file:///abs/path`.
+- Remote projects must register rig URLs as remote git URLs.
+- Parallel execution always means GT-managed `Polecat` sessions, not Codex subagents.
+
 ## Repo-Local Layout
 
 Within this repository, use these paths directly:
@@ -21,9 +29,7 @@ Within this repository, use these paths directly:
 - Skills: `.opencode/skills/*`
 - GT runtime snapshot: `gt/`
 - Ignored local docs snapshot: `docs/`
-- Ignored local archive directory: `output/`
-
-The ignored repo-local `output/` directory is not the formal runtime contract.
+- Formal runtime delivery root (gitignored): `output/`
 
 ## Input Modes
 
@@ -46,16 +52,16 @@ The goal-driven workflow is embedded inside `software-prototyper-orchestrator`.
 
 - Repo-local source: `.opencode/agents/` and `.opencode/skills/`
 - Runtime snapshot: `gt/`
-- Formal runtime output root: `Prototype-output/{project_id}/`
+- Formal runtime output root: `output/{project_id}/`
 
-Keep using `Prototype-output/{project_id}/` for generated specs, workspace code, runbooks, and QA evidence. Do not replace it with `software-prototyper/output/`, which is only an ignored local archive directory in this repo.
+Use `output/{project_id}/` for generated specs, workspace code, runbooks, and QA evidence.
 
 ## Output Contract
 
 The single valid runtime output root is:
 
 ```text
-Prototype-output/{project_id}/
+output/{project_id}/
 ```
 
 This root should contain specs, plans, workspace code, runbook docs, and QA evidence.

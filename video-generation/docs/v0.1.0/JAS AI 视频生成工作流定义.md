@@ -527,6 +527,14 @@ ffmpeg -i videos/final-drama.mp4 \
 
 将 10 个阶段映射为 GasTown 的 **5 个 Wave**。Polecat 数量随场景数 N 动态扩展，串行任务由 Mayor 直接执行。
 
+### Rig URL 前置规则
+
+- Mayor 必须在任何新项目 / 新会话进入阶段 0 之前先创建或确认 rig。
+- 项目源目录必须固定为与 `gt/` 同级的 `output/<project-name>`，不能放进 `gt/` 子树，也不能使用其他同级目录。
+- 本地项目必须把 rig URL 写成 `file:///abs/path`，禁止裸路径。
+- 远程项目必须使用远程 git URL。
+- 标准创建链路是 `gt rig add <rig> <url>` → `gt rig start <rig>` → `gt polecat list <rig>`。
+
 ### 执行角色分工
 
 | 角色              | 职责                | 说明                                                     |

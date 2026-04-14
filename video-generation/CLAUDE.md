@@ -30,6 +30,14 @@ The video workflow uses the standard three-role JAS layout:
 
 GT configuration under `gt/` maps the three GT roles to those three OpenCode agents.
 
+Rig preparation follows one active rule:
+
+- On every new project or new session, Mayor creates or confirms the rig first.
+- The project source directory must be `output/<project-name>` next to `gt/`, not another sibling and not a child inside `gt/`.
+- Local projects must register rig URLs as `file:///abs/path`.
+- Remote projects must register rig URLs as remote git URLs.
+- Parallel execution always means GT-managed `Polecat` sessions, not generic subagents.
+
 ## Running Stage Scripts
 
 Stage source files live in `.opencode/skills/`, and runtime commands should use project-local paths:

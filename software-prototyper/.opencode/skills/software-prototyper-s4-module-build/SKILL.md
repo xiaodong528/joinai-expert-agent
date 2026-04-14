@@ -25,21 +25,25 @@ description: "按模块实现软件原型。Triggers on module build、feature s
 
 ## 输出契约
 
-- `Prototype-output/{project_id}/workspace/`
-- `Prototype-output/{project_id}/evidence/modules/{module_name}/summary.md`
-- `Prototype-output/{project_id}/evidence/modules/{module_name}/test-results.txt`
+- `output/{project_id}/workspace/`
+- `output/{project_id}/evidence/modules/{module_name}/summary.md`
+- `output/{project_id}/evidence/modules/{module_name}/test-results.txt`
+- `output/{project_id}/evidence/modules/{module_name}/unit-test-results.txt`
+- `output/{project_id}/evidence/modules/{module_name}/integration-test-results.txt`
 
 ## 执行流程
 
 1. 读取当前模块 bead，确认范围和停止条件。
 2. 优先写失败测试，再做最小实现。
-3. 若失败，先做根因分析，再修复。
-4. 保存模块证据，等待 Reviewer 裁定。
-5. 未获通过前不得自报完成，也不得并入最终交付。
+3. 至少补齐当前模块的单元测试与模块间集成测试证据。
+4. 若失败，先做根因分析，再修复。
+5. 保存模块证据，等待 Reviewer 裁定。
+6. 未获通过前不得自报完成，也不得并入最终交付。
 
 ## 验证清单
 
 - [ ] 模块范围未越界
 - [ ] 模块有测试证据
+- [ ] 模块单元测试与模块间集成测试证据齐全
 - [ ] 模块交付说明已保存
 - [ ] 已等待 Reviewer 裁定

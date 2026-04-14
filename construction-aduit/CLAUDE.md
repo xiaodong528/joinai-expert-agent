@@ -74,6 +74,14 @@ The active construction-audit role map is:
 
 This round intentionally leaves `gt/roles/*.toml` unchanged.
 
+Rig preparation follows one active rule:
+
+- On every new project or new review session, Mayor creates or confirms the rig first.
+- The project source directory must be `output/<project-name>` next to `gt/`, not another sibling and not a child inside `gt/`.
+- Local projects must register rig URLs as `file:///abs/path`.
+- Remote projects must register rig URLs as remote git URLs.
+- Parallel execution always means GT-managed `Polecat` sessions; for S3, one sheet maps to one `Polecat`.
+
 ## Runtime Notes
 
 - Run GT git commands from `construction-aduit/gt/`.

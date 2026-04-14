@@ -1,11 +1,11 @@
 ---
 name: software-prototyper-gt-status-report
-description: "Gas Town 状态上报共享技能：供 Orchestrator、Worker、Reviewer 在 GT 会话中执行 `gt prime`、`bd update` 与 `gt done`，同步当前 rig 下的角色身份、任务状态和完成信号。Gas Town 默认 witness 巡逻若启用，仍应使用 `bd mol wisp`，不得使用 `bd mol pour`。Triggers on gt status, status report, bead update, worker done, 会话初始化、状态上报、巡逻记录。"
+description: "Gas Town 状态上报共享技能：供 Orchestrator、Worker、Reviewer 在 GT 会话中执行 `gt prime`、`bd update` 与 `gt done`，同步当前 rig 下的角色身份、Wave / bead 状态和完成信号。Gas Town 默认 witness 巡逻若启用，仍应使用 `bd mol wisp`，不得使用 `bd mol pour`。Triggers on gt status, status report, bead update, worker done, 会话初始化、状态上报、巡逻记录。"
 ---
 
 # Skill: software-prototyper-gt-status-report
 
-**用途（Purpose）:** software-prototyper 主链三角色共享的 GT 状态上报技能。在 Gas Town 会话中统一处理角色身份注入、Bead 状态更新和 Worker 完成信号。Gas Town 默认 witness 巡逻若启用，仍由平台默认机制负责。所有状态都以当前 rig 为唯一真值来源。
+**用途（Purpose）:** software-prototyper 主链三角色共享的 GT 状态上报技能。在 Gas Town 会话中统一处理角色身份注入、Wave / bead 状态更新和完成信号。Gas Town 默认 witness 巡逻若启用，仍由平台默认机制负责。所有状态都以当前 rig 为唯一真值来源。
 
 ## 依赖
 
@@ -57,9 +57,9 @@ bd update <bead-id> --status failed
 
 典型场景：
 
-- Orchestrator 标记阶段开始或等待依赖
-- Worker 标记任务开始、阻塞或失败
-- Reviewer 标记 review 完成
+- Orchestrator 标记 S0 / S1 / S2 或 Wave 启动与等待依赖
+- Worker 标记 bead 开始、阻塞、完成或失败
+- Reviewer 标记独立验收完成并回写结论
 
 ### 3. Gas Town 默认 witness 巡逻说明
 
@@ -82,17 +82,19 @@ gt done
 
 用途：
 
-- Worker 完成 sling 任务后向 Orchestrator 发出完成信号
-- Orchestrator 再决定是否进入下一阶段或触发 Reviewer
+- Worker 完成 bead 后向 Orchestrator 发出完成信号
+- Reviewer 完成独立验收后也可配合状态写回
+- Orchestrator 再决定是否进入下一阶段或触发下一轮 review
 
 ## 验证清单（Validation Checklist）
 
 - [ ] `gt prime` 执行后，当前会话已注入正确角色与当前 rig
 - [ ] `bd update` 仅更新当前 rig 下对应 bead 的状态
 - [ ] 状态值仅使用 `in_progress`、`blocked`、`done`、`failed`
+- [ ] 文案明确当前主链围绕 S0 / S1 / S2 / Wave 1 / Wave 2 / Wave 3
 - [ ] 文案明确 Gas Town 默认 witness 不属于 software-prototyper 自定义角色注册
 - [ ] Gas Town 默认 witness 巡逻若启用，使用 `bd mol wisp`，不得使用 `bd mol pour`
-- [ ] `gt done` 仅在 Worker 完成当前 sling 任务后触发
+- [ ] `gt done` 用于 bead 或验收结论完成后的正式完成信号
 - [ ] 状态说明中明确“当前 rig 是唯一真值来源”
 
 ## 非职责范围（Non-goals）

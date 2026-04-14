@@ -15,12 +15,12 @@ This module keeps the software-prototyper source and runtime snapshot together u
 - `docs/`
   Ignored local docs snapshot and planning notes.
 - `output/`
-  Ignored local archive / sample / evidence directory inside the repository.
+  Formal runtime delivery root inside the repository (gitignored).
 
-Do not confuse the ignored repo-local `output/` directory with the runtime delivery contract. The formal runtime output root remains:
+The formal runtime output root is:
 
 ```text
-Prototype-output/{project_id}/
+output/{project_id}/
 ```
 
 ## Dual Entry Workflow
@@ -44,6 +44,14 @@ Polecat sessions are the parallel execution plane.
 
 GT configuration under `gt/` maps the three GT roles to those three agents.
 
+Rig preparation follows one active rule:
+
+- On every new project, Mayor creates or confirms the project source directory first.
+- The project source directory must be `output/<project-name>` next to `gt/`, not another sibling and not a child inside `gt/`.
+- Local projects must register rig URLs as `file:///abs/path`.
+- Remote projects must register rig URLs as remote git URLs.
+- Parallel execution always means GT-managed `Polecat` sessions, not Codex subagents.
+
 ## Source Of Truth
 
 - Agent source: `.opencode/agents/*.md`
@@ -57,7 +65,7 @@ The project includes vendored local skills for execution workflows and GT operat
 All formal delivery evidence is collected under:
 
 ```text
-Prototype-output/{project_id}/
+output/{project_id}/
 ```
 
 Recommended runtime structure:
@@ -68,7 +76,7 @@ Recommended runtime structure:
 - `docs/`
 - `evidence/`
 
-Repo-local `software-prototyper/output/` is only an ignored archive / sample directory. Runtime code, runbooks, and acceptance evidence should still follow `Prototype-output/{project_id}/`.
+This output root remains gitignored, but it is the formal location for runtime code, runbooks, and acceptance evidence in this module.
 
 ## GT Notes
 

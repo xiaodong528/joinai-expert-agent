@@ -9,6 +9,8 @@ description: Use when receiving code review feedback, before implementing sugges
 
 Code review requires technical evaluation, not emotional performance.
 
+在 `software-prototyper` 主链里，反馈来源可以是 `Refinery`、外部 reviewer、或人工 review；收到反馈后必须先验证意见，再决定是否返工。
+
 **Core principle:** Verify before implementing. Ask before assuming. Technical correctness over social comfort.
 
 ## The Response Pattern
@@ -23,6 +25,8 @@ WHEN receiving code review feedback:
 5. RESPOND: Technical acknowledgment or reasoned pushback
 6. IMPLEMENT: One item at a time, test each
 ```
+
+收到反馈后必须先验证再返工，不允许把 review 意见当作自动执行命令。
 
 ## Forbidden Responses
 

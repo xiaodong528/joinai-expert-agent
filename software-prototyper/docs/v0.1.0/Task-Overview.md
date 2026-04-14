@@ -9,7 +9,7 @@
 - `software-prototyper-reviewer`：Refinery
 
 Mayor 与 Refinery 共同组成 master 控制面（Mayor + Refinery）。
-Polecat 是多个并行 subagent 执行单元。
+Polecat 是 GT 管理的多个并行执行单元，不是 Codex 子代理。
 
 ## 2. 双目录分工
 
@@ -29,7 +29,15 @@ Polecat 是多个并行 subagent 执行单元。
 1. 从零开始，多轮 brainstorm，逐步收敛成类似 `PLAN.md` 的规格与验收标准
 2. 直接读取现成方案文档，跳过 brainstorm，进入开发执行
 
-## 4. 6 段主流程
+## 4. Rig 前置规则
+
+- 新项目先生成 project slug，再创建或确认 rig。
+- 项目源目录必须固定为与 `gt/` 同级的 `output/<project-name>`，不能放在 `gt/` 子树中，也不能使用其他同级目录。
+- 本地项目必须使用 `file:///abs/path` 作为 rig URL；禁止裸路径。
+- 远程项目必须使用远程 git URL。
+- 标准链路是：`gt rig add <rig> <url>` → `gt rig start <rig>` → `gt polecat list <rig>`。
+
+## 5. 6 段主流程
 
 1. `S0` 入口判定
 2. `S1` 规格冻结
@@ -38,23 +46,23 @@ Polecat 是多个并行 subagent 执行单元。
 5. `Wave 2` 模块并行开发
 6. `Wave 3` 集成与收尾
 
-## 5. 默认技术栈策略
+## 6. 默认技术栈策略
 
 - 用户指定技术栈时，以用户指定为准
 - 未指定时，默认使用 `Next.js + Node + SQLite`
 
-## 6. 并行策略
+## 7. 并行策略
 
-Mayor 按业务模块派发并行 polecat / OpenCode 进程。
+Mayor 按业务模块派发并行 GT Polecat / OpenCode 会话。
 这里的并行语义来自 GT，不是 Codex 子代理派发。
 Refinery 逐模块裁定，Mayor 负责重派或停止。
 
-## 7. 交付证据
+## 8. 交付证据
 
 统一输出根目录：
 
 ```text
-Prototype-output/{project_id}/
+output/{project_id}/
 ```
 
 至少包含：
@@ -65,7 +73,7 @@ Prototype-output/{project_id}/
 - `docs/`
 - `evidence/`
 
-## 8. 完成标准
+## 9. 完成标准
 
 - 原型可启动
 - 核心用户流 smoke / E2E 通过

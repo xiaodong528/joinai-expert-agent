@@ -47,6 +47,32 @@ gt prime                   # Output role context for current directory
 gt feed                    # Real-time activity feed
 ```
 
+## Rig Creation Modes
+
+创建 rig 时，默认采用**本地优先**口径，不要把“先建 GitHub 仓库”当成技术前置。
+
+```bash
+# 默认：本地初始化 / 本地 adopt
+gt init
+gt rig add <rig> --adopt --force
+
+# 可选：远程仓库注册
+gt rig add <rig> <git-url> --local-repo <path> --prefix <prefix>
+
+# 若源仓库在本机，<git-url> 必须使用 file:// URL
+gt rig add <rig> file:///Users/me/src/repo --prefix <prefix>
+```
+
+适用规则：
+
+- 本地新项目、临时原型、尚未有远程仓库：默认走本地路径
+- 已有本地 repo，想让 GT 接管当前工作区：默认走本地路径
+- 只有当 rig 需要明确绑定到已有 GitHub / Git remote 并以该仓库作为运行基座时，才走 `git-url` 路径
+- `git-url` 是远程绑定模式输入，不是创建 rig 的唯一入口
+- 当 `<git-url>` 对应本地仓库源时，必须写成 `file:///abs/path`，不能直接传裸路径 `/abs/path`
+- `--local-repo <path>` 只负责对象共享 / 复用，不会把裸路径自动当成合法 `<git-url>`
+- 若报 `invalid git URL "/abs/path"`，优先把源仓库改写成 `file:///abs/path`
+
 ## I want to...
 
 | Goal | Command |
@@ -281,6 +307,11 @@ gt dolt sync                              # Push to DoltHub remotes
 gt dolt recover                           # Recover from read-only state
 gt dolt rebase <db>                       # Surgical compaction
 gt dolt flatten <db>                      # Flatten history (NUCLEAR)
+
+# Rig creation
+gt init                                   # Initialize current directory as rig
+gt rig add <rig> --adopt --force          # Register/adopt local rig into GT
+gt rig add <rig> <git-url> --local-repo <path> --prefix <prefix>  # Register rig from remote-bound repo
 
 # Rig lifecycle
 gt rig start <rig>                        # Start witness and refinery

@@ -48,6 +48,7 @@ Skip any step = lying, not verifying
 | Regression test works | Red-green cycle verified | Test passes once |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
+| Final delivery ready | build、typecheck、单元测试、集成测试、端到端测试与浏览器验证全部成功 | “代码差不多齐了” |
 
 ## Red Flags - STOP
 
@@ -137,3 +138,5 @@ From 24 failure memories:
 Run the command. Read the output. THEN claim the result.
 
 This is non-negotiable.
+
+在 `software-prototyper` 主链里，只有当项目可运行、可演示、核心页面和核心流程都已落地，且构建、类型检查、单元测试、集成测试、端到端测试、浏览器测试全部通过后，才允许进入 merge / landing / final delivery。

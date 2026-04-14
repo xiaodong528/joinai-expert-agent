@@ -23,16 +23,16 @@ description: "搭建软件原型底座。Triggers on foundation bootstrap、prot
 
 ## 输出契约
 
-- `Prototype-output/{project_id}/workspace/`
-- `Prototype-output/{project_id}/docs/runbook.md`
-- `Prototype-output/{project_id}/evidence/foundation-check.txt`
+- `output/{project_id}/workspace/`
+- `output/{project_id}/docs/runbook.md`
+- `output/{project_id}/evidence/foundation-check.txt`
 
 ## 执行流程
 
 1. 按用户指定技术栈或默认 `Next.js + Node + SQLite` 建立底座。
 2. 生成目录结构、环境变量模板、测试命令和运行说明。
 3. 用最小 Smoke 验证底座可启动。
-4. 把基建证据写入 `Prototype-output/{project_id}/evidence/`。
+4. 把基建证据写入 `output/{project_id}/evidence/`。
 
 ## 验证清单
 

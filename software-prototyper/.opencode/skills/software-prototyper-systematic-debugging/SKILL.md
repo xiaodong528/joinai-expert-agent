@@ -287,6 +287,9 @@ These techniques are part of systematic debugging and available in this director
 - **software-prototyper-test-driven-development** - For creating failing test case (Phase 4, Step 1)
 - **software-prototyper-verification-before-completion** - Verify fix worked before claiming success
 
+在 `software-prototyper` 主链里，任何失败、缺口、回归、伪实现、未完成模块，都必须继续修复直到全部收敛。
+在需要长期返工的场景下，必须持续修复直到全部收敛。
+
 ## Real-World Impact
 
 From debugging sessions:

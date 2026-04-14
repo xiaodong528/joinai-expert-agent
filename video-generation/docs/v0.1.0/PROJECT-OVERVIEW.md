@@ -33,6 +33,13 @@ Stage 10 质量审查 (Mayor, ffprobe+LLM) → qa-report.json
 
 10 场景时峰值并行度 21 个 Polecat。
 
+### Rig URL 前置规则
+
+- Mayor 必须在任何新项目 / 新会话进入 Stage 0 之前先创建或确认 rig。
+- 项目源目录必须固定为与 `gt/` 同级的 `output/<project-name>`，不能放在 `gt/` 子树里，也不能使用其他同级目录。
+- 本地项目必须把 rig URL 写成 `file:///abs/path`，禁止裸路径。
+- 远程项目必须使用远程 git URL。
+
 ---
 
 ## 2. 技术栈总表
@@ -72,10 +79,10 @@ Stage 10 质量审查 (Mayor, ffprobe+LLM) → qa-report.json
 
 ```
 GasTown Mayor（并行编排层）
-  │ dispatch beads → Polecat (Wave 1/2/3 并行子智能体)
+  │ dispatch beads → GT Polecat (Wave 1/2/3 并行会话)
   ▼
 OpenCode Agent: video-generation-orchestrator（主编排智能体）
-  │ Wave 1/2/3: 派发子智能体并行执行
+  │ Wave 1/2/3: 派发 GT Polecat 并行执行
   │ Stage 7-10: 主智能体直接串行执行
   ▼
 11 个 Stage Skill（混合式：指令 + 脚本引用）
@@ -87,7 +94,7 @@ OpenCode Agent: video-generation-orchestrator（主编排智能体）
 | 决策 | 选择 |
 |------|------|
 | 封装层级 | 11 独立 Skill + Agent 层编排 |
-| 编排模式 | 并行阶段 → 子智能体；串行阶段 → 主智能体直接执行 |
+| 编排模式 | 并行阶段 → GT Polecat；串行阶段 → 主智能体直接执行 |
 | MCP 策略 | 轻量为主，仅复杂感知类用 MCP |
 | Skill 粒度 | 混合式：核心 API 脚本固化 + 灵活部分指令式 |
 
